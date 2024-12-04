@@ -1,4 +1,4 @@
-package com.epam.finaltask.service.impl;
+package com.epam.finaltask.service;
 
 import com.epam.finaltask.dto.VoucherDTO;
 import com.epam.finaltask.exception.EntityNotFoundException;
