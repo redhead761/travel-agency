@@ -6,7 +6,6 @@ import com.epam.finaltask.exception.EntityNotFoundException;
 import com.epam.finaltask.mapper.UserMapper;
 import com.epam.finaltask.model.User;
 import com.epam.finaltask.repository.UserRepository;
-import com.epam.finaltask.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
