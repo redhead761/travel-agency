@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.epam.finaltask.exception.StatusCodes.OK;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -47,9 +48,9 @@ public class VoucherControllerImpl implements VoucherController {
     }
 
     @Override
-    @GetMapping("/{userId}")
-    public ResponseEntity<RemoteResponse> findAllByUserId(@PathVariable String userId) {
-        List<VoucherDTO> result = voucherService.findAllByUserId(userId);
+    @GetMapping("/user/{id}")
+    public ResponseEntity<RemoteResponse> findAllByUserId(@PathVariable UUID id) {
+        List<VoucherDTO> result = voucherService.findAllByUserId(id);
 
         return ResponseEntity.ok()
                 .body(RemoteResponse.builder()
@@ -61,7 +62,7 @@ public class VoucherControllerImpl implements VoucherController {
     }
 
     @Override
-    @GetMapping("/tour/{tourType}")
+    @GetMapping("/{tourType}")
     public ResponseEntity<RemoteResponse> findAllByTourType(@PathVariable String tourType) {
         List<VoucherDTO> result = voucherService.findAllByTourType(tourType);
 
@@ -76,7 +77,7 @@ public class VoucherControllerImpl implements VoucherController {
 
 
     @Override
-    @GetMapping("/transfer/{transferType}")
+    @GetMapping("/{transferType}")
     public ResponseEntity<RemoteResponse> findAllByTransferType(@PathVariable String transferType) {
         List<VoucherDTO> result = voucherService.findAllByTransferType(transferType);
 
@@ -90,7 +91,7 @@ public class VoucherControllerImpl implements VoucherController {
     }
 
     @Override
-    @GetMapping("/hotel/{hotelType}")
+    @GetMapping("/{hotelType}")
     public ResponseEntity<RemoteResponse> findAllByHotelType(@PathVariable String hotelType) {
         List<VoucherDTO> result = voucherService.findAllByHotelType(hotelType);
 
@@ -104,7 +105,7 @@ public class VoucherControllerImpl implements VoucherController {
     }
 
     @Override
-    @GetMapping("/price/{price}")
+    @GetMapping("/{price}")
     public ResponseEntity<RemoteResponse> findAllByPrice(@PathVariable String price) {
         List<VoucherDTO> result = voucherService.findAllByPrice(price);
 
@@ -133,10 +134,10 @@ public class VoucherControllerImpl implements VoucherController {
     }
 
     @Override
-    @PostMapping("/{orderId}/{userId}")
-    public ResponseEntity<RemoteResponse> orderVoucher(@PathVariable String orderId,
-                                                       @PathVariable String userId) {
-        VoucherDTO orderedVoucherDto = voucherService.order(orderId, userId);
+    @PostMapping("/{id}/order")
+    public ResponseEntity<RemoteResponse> orderVoucher(@PathVariable UUID id,
+                                                       @RequestBody UUID userId) {
+        VoucherDTO orderedVoucherDto = voucherService.order(id, userId);
 
         return ResponseEntity.ok()
                 .body(RemoteResponse.builder()
@@ -149,8 +150,8 @@ public class VoucherControllerImpl implements VoucherController {
 
     @Override
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
-    @PatchMapping("/change/{id}")
-    public ResponseEntity<RemoteResponse> updateVoucher(@PathVariable String id,
+    @PutMapping("/{id}")
+    public ResponseEntity<RemoteResponse> updateVoucher(@PathVariable UUID id,
                                                         @Validated @RequestBody VoucherDTO voucherDTO) {
         VoucherDTO updatedVoucherDto = voucherService.update(id, voucherDTO);
 
@@ -166,7 +167,7 @@ public class VoucherControllerImpl implements VoucherController {
     @Override
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<RemoteResponse> deleteById(@PathVariable String id) {
+    public ResponseEntity<RemoteResponse> deleteVoucher(@PathVariable UUID id) {
         voucherService.delete(id);
 
         return ResponseEntity.ok()
@@ -181,9 +182,9 @@ public class VoucherControllerImpl implements VoucherController {
     @Override
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER')")
     @PatchMapping("/{id}")
-    public ResponseEntity<RemoteResponse> changeVoucherStatus(@PathVariable String id,
-                                                              @Validated @RequestBody VoucherDTO voucherDTO) {
-        VoucherDTO updatedVoucherDto = voucherService.changeHotStatus(id, voucherDTO);
+    public ResponseEntity<RemoteResponse> changeVoucherStatus(@PathVariable UUID id,
+                                                              @RequestBody boolean status) {
+        VoucherDTO updatedVoucherDto = voucherService.changeHotStatus(id, status);
 
         return ResponseEntity.ok()
                 .body(RemoteResponse.builder()

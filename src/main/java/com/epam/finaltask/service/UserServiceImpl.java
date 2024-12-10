@@ -3,18 +3,22 @@ package com.epam.finaltask.service;
 import com.epam.finaltask.dto.UserDTO;
 import com.epam.finaltask.exception.EntityAlreadyExistsException;
 import com.epam.finaltask.exception.EntityNotFoundException;
+import com.epam.finaltask.exception.EnumNotFoundException;
 import com.epam.finaltask.mapper.UserMapper;
+import com.epam.finaltask.model.Role;
 import com.epam.finaltask.model.User;
 import com.epam.finaltask.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 import static com.epam.finaltask.exception.StatusCodes.*;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -28,48 +32,56 @@ public class UserServiceImpl implements UserService {
     public UserDTO register(UserDTO userDTO) {
         isUniqueUsername(userDTO.getUsername());
 
-        User user = userMapper.toUser(userDTO);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setAccountStatus(true);
-        userRepository.save(user);
+        userDTO.setRole(Role.USER.name());
+        userDTO.setAccountStatus(true);
+        User newUser = userMapper.toUser(userDTO);
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        User savedUser = userRepository.save(newUser);
 
-        return userMapper.toUserDTO(user);
+        return userMapper.toUserDTO(savedUser);
     }
 
     @Override
-    public UserDTO updateUser(String username, UserDTO userDTO) {
-        User userForUpdate = userRepository.findUserByUsername(username)
+    public UserDTO updateUser(UUID id, UserDTO userDTO) {
+        User userToUpdate = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND.name(), "User not found"));
 
-        User newUser = userMapper.toUser(userDTO);
+        isUniqueUsername(userDTO.getUsername());
 
-        userForUpdate.setUsername(newUser.getUsername());
-        userForUpdate.setRole(newUser.getRole());
-        userForUpdate.setAccountStatus(newUser.isAccountStatus());
-        userForUpdate.setBalance(newUser.getBalance());
+        userToUpdate.setUsername(userDTO.getUsername());
+        userToUpdate.setPhoneNumber(userDTO.getPhoneNumber());
+        userToUpdate.setBalance(userDTO.getBalance());
+        User updatedUser = userRepository.save(userToUpdate);
 
-        return userMapper.toUserDTO(userRepository.save(userForUpdate));
+        return userMapper.toUserDTO(updatedUser);
     }
 
     @Override
-    public UserDTO getUserByUsername(String username) {
-        User user = userRepository.findUserByUsername(username)
+    public UserDTO changeRole(UUID id, String role) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND.name(), "User not found"));
-        return userMapper.toUserDTO(user);
+
+        try {
+            user.setRole(Role.valueOf(role.toUpperCase()));
+            User updatedUser = userRepository.save(user);
+            return userMapper.toUserDTO(updatedUser);
+        } catch (IllegalArgumentException e) {
+            throw new EnumNotFoundException("Enum value not found");
+        }
     }
 
     @Override
-    public UserDTO changeAccountStatus(UserDTO userDTO) {
-        User user = userRepository.findById(UUID.fromString(userDTO.getId()))
+    public UserDTO changeAccountStatus(UUID id, boolean accountStatus) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND.name(), "User not found"));
 
-        User newUser = userMapper.toUser(userDTO);
+        user.setAccountStatus(accountStatus);
+        User updatedUser = userRepository.save(user);
 
-        user.setAccountStatus(newUser.isAccountStatus());
-
-        return userMapper.toUserDTO(userRepository.save(user));
+        return userMapper.toUserDTO(updatedUser);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public UserDTO getUserById(UUID id) {
         User user = userRepository.findById(id)

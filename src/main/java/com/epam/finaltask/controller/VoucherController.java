@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 
+import java.util.UUID;
+
 public interface VoucherController {
     @Operation(
             summary = "Get all vouchers",
@@ -26,7 +28,7 @@ public interface VoucherController {
             @ApiResponse(responseCode = "200", description = "User's vouchers successfully retrieved"),
             @ApiResponse(responseCode = "500", description = "Unexpected internal error")
     })
-    ResponseEntity<RemoteResponse> findAllByUserId(String userId);
+    ResponseEntity<RemoteResponse> findAllByUserId(UUID id);
 
     @Operation(
             summary = "Get vouchers by tour type",
@@ -86,7 +88,7 @@ public interface VoucherController {
             @ApiResponse(responseCode = "201", description = "Voucher successfully ordered"),
             @ApiResponse(responseCode = "400", description = "Validation error, e.g., invalid input")
     })
-    ResponseEntity<RemoteResponse> orderVoucher(String orderId, String userId);
+    ResponseEntity<RemoteResponse> orderVoucher(UUID orderId, UUID userId);
 
     @Operation(
             summary = "Update voucher data",
@@ -96,7 +98,7 @@ public interface VoucherController {
             @ApiResponse(responseCode = "200", description = "Voucher successfully updated"),
             @ApiResponse(responseCode = "400", description = "Validation error, e.g., invalid input")
     })
-    ResponseEntity<RemoteResponse> updateVoucher(String id, VoucherDTO voucherDTO);
+    ResponseEntity<RemoteResponse> updateVoucher(UUID id, VoucherDTO voucherDTO);
 
     @Operation(
             summary = "Delete a voucher",
@@ -106,7 +108,7 @@ public interface VoucherController {
             @ApiResponse(responseCode = "200", description = "Voucher successfully deleted"),
             @ApiResponse(responseCode = "404", description = "Voucher not found")
     })
-    ResponseEntity<RemoteResponse> deleteById(String id);
+    ResponseEntity<RemoteResponse> deleteVoucher(UUID id);
 
     @Operation(
             summary = "Change voucher status",
@@ -116,6 +118,6 @@ public interface VoucherController {
             @ApiResponse(responseCode = "200", description = "Voucher status successfully updated"),
             @ApiResponse(responseCode = "400", description = "Validation error, e.g., invalid input")
     })
-    ResponseEntity<RemoteResponse> changeVoucherStatus(String id, VoucherDTO voucherDTO);
+    ResponseEntity<RemoteResponse> changeVoucherStatus(UUID id, boolean status);
 }
 

@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     private static final String LOG_MESSAGE = "ErrorId: {}, {}: {}";
     private static final String VALIDATION_ERROR = "Validation error";
 
-    @ExceptionHandler(EntityNotFoundException.class)
+    @ExceptionHandler(TravelAgencyException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public RemoteResponse notFoundException(TravelAgencyException e) {
         logError(e.getErrorId(), RESPONSE_STATUS_EXCEPTION, e.getMessage());

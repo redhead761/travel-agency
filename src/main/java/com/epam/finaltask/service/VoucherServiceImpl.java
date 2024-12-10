@@ -32,11 +32,11 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    public VoucherDTO order(String id, String userId) {
-        Voucher voucher = voucherRepository.findById(UUID.fromString(id))
+    public VoucherDTO order(UUID voucherId, UUID userId) {
+        Voucher voucher = voucherRepository.findById(voucherId)
                 .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND.name(), "Voucher not found"));
 
-        User user = userRepository.findById(UUID.fromString(id))
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND.name(), "User not found"));
 
         voucher.setUser(user);
@@ -46,8 +46,8 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    public VoucherDTO update(String id, VoucherDTO voucherDTO) {
-        Voucher voucherForUpdate = voucherRepository.findById(UUID.fromString(id))
+    public VoucherDTO update(UUID id, VoucherDTO voucherDTO) {
+        Voucher voucherForUpdate = voucherRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND.name(), "Voucher not found"));
 
         Voucher newVoucher = voucherMapper.toVoucher(voucherDTO);
@@ -68,29 +68,29 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    public void delete(String voucherId) {
-        voucherRepository.findById(UUID.fromString(voucherId))
+    public void delete(UUID id) {
+        voucherRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND.name(), "Voucher not found"));
 
-        voucherRepository.deleteById(UUID.fromString(voucherId));
+        voucherRepository.deleteById(id);
     }
 
     @Override
-    public VoucherDTO changeHotStatus(String id, VoucherDTO voucherDTO) {
-        Voucher voucher = voucherRepository.findById(UUID.fromString(id))
+    public VoucherDTO changeHotStatus(UUID id, boolean hotStatus) {
+        Voucher voucher = voucherRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND.name(), "Voucher not found"));
 
-        Voucher newVoucher = voucherMapper.toVoucher(voucherDTO);
+//        Voucher newVoucher = voucherMapper.toVoucher(voucherDTO);
 
-        voucher.setHot(newVoucher.isHot());
-        voucher.setStatus(newVoucher.getStatus());
+        voucher.setHot(hotStatus);
+//        voucher.setStatus(newVoucher.getStatus());
 
         return voucherMapper.toVoucherDTO(voucherRepository.save(voucher));
     }
 
     @Override
-    public List<VoucherDTO> findAllByUserId(String userId) {
-        return voucherRepository.findAllByUserId(UUID.fromString(userId)).stream()
+    public List<VoucherDTO> findAllByUserId(UUID id) {
+        return voucherRepository.findAllByUserId(id).stream()
                 .map(voucherMapper::toVoucherDTO).toList();
     }
 

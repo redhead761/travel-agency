@@ -25,12 +25,12 @@ public class LoggingDebugAspect {
     @Before("servicePackage() || controllerPackage()")
     public void before(JoinPoint joinPoint) {
         Signature signature = joinPoint.getSignature();
-        log.debug("Method {}.{} was called", signature.getDeclaringTypeName(), signature.getName());
+        log.info("Method {}.{} was called", signature.getDeclaringTypeName(), signature.getName());
     }
 
     @AfterReturning("servicePackage() || controllerPackage()")
     public void after(JoinPoint joinPoint) {
         Signature signature = joinPoint.getSignature();
-        log.debug("Method {}.{} successfully executed", signature.getDeclaringTypeName(), signature.getName());
+        log.info("Method {}.{} successfully executed", signature.getDeclaringTypeName(), signature.getName());
     }
 }

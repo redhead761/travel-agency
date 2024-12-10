@@ -4,19 +4,20 @@ import com.epam.finaltask.dto.VoucherDTO;
 import com.epam.finaltask.exception.EntityAlreadyExistsException;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface VoucherService {
     VoucherDTO create(VoucherDTO voucherDTO);
 
-    VoucherDTO order(String id, String userId) throws EntityAlreadyExistsException;
+    VoucherDTO order(UUID id, UUID userId) throws EntityAlreadyExistsException;
 
-    VoucherDTO update(String id, VoucherDTO voucherDTO);
+    VoucherDTO update(UUID id, VoucherDTO voucherDTO);
 
-    void delete(String voucherId);
+    void delete(UUID id);
 
-    VoucherDTO changeHotStatus(String id, VoucherDTO voucherDTO);
+    VoucherDTO changeHotStatus(UUID id, boolean hotStatus);
 
-    List<VoucherDTO> findAllByUserId(String userId);
+    List<VoucherDTO> findAllByUserId(UUID userId);
 
     List<VoucherDTO> findAllByTourType(String tourType);
 

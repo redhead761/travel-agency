@@ -3,7 +3,11 @@ package com.epam.finaltask.controller.impl;
 import com.epam.finaltask.controller.UserController;
 import com.epam.finaltask.dto.RemoteResponse;
 import com.epam.finaltask.dto.UserDTO;
+import com.epam.finaltask.dto.group.OnChange;
+import com.epam.finaltask.dto.group.OnCreate;
+import com.epam.finaltask.model.Role;
 import com.epam.finaltask.service.UserService;
+import com.epam.finaltask.util.validator.ValidEnum;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -31,7 +36,8 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @PostMapping("/register")
-    public ResponseEntity<RemoteResponse> registerUser(@Validated @RequestBody UserDTO userDto) {
+    public ResponseEntity<RemoteResponse> registerUser(@Validated(OnCreate.class)
+                                                       @RequestBody UserDTO userDto) {
         UserDTO createdUserDto = userService.register(userDto);
 
         return ResponseEntity.status(CREATED)
@@ -44,10 +50,10 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    @PatchMapping("/{username}")
-    public ResponseEntity<RemoteResponse> updateUser(@PathVariable String username,
+    @PutMapping("/{id}")
+    public ResponseEntity<RemoteResponse> updateUser(@PathVariable UUID id,
                                                      @Validated @RequestBody UserDTO userDto) {
-        UserDTO updatedUserDto = userService.updateUser(username, userDto);
+        UserDTO updatedUserDto = userService.updateUser(id, userDto);
 
         return ResponseEntity.ok()
                 .body(RemoteResponse.builder()
@@ -59,9 +65,9 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    @GetMapping("/{username}")
-    public ResponseEntity<RemoteResponse> getUserByUsername(@PathVariable("username") String username) {
-        UserDTO userDTO = userService.getUserByUsername(username);
+    @GetMapping("/{id}")
+    public ResponseEntity<RemoteResponse> getUser(@PathVariable UUID id) {
+        UserDTO userDTO = userService.getUserById(id);
 
         return ResponseEntity.ok()
                 .body(RemoteResponse.builder()
@@ -74,10 +80,27 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
-    @PatchMapping("/change/{username}")
-    public ResponseEntity<RemoteResponse> changeUserAccountStatus(@PathVariable String username,
-                                                                  @Validated @RequestBody UserDTO userDto) {
-        UserDTO updatedUserDto = userService.updateUser(username, userDto);
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<RemoteResponse> changeUserAccountStatus(@PathVariable UUID id,
+                                                                  @RequestParam boolean accountStatus) {
+        //UserDTO updatedUserDto = userService.updateUser(username, accountStatus);
+        UserDTO updatedUserDto = userService.changeAccountStatus(id, accountStatus);
+
+        return ResponseEntity.ok()
+                .body(RemoteResponse.builder()
+                        .succeeded(true)
+                        .statusCode(OK.name())
+                        .statusMessage(USER_UPDATED)
+                        .results(List.of(updatedUserDto))
+                        .build());
+    }
+
+    @Override
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    @PatchMapping("/{id}/role")
+    public ResponseEntity<RemoteResponse> changeRole(@PathVariable UUID id,
+                                                     @RequestParam String role) {
+        UserDTO updatedUserDto = userService.changeRole(id, role);
 
         return ResponseEntity.ok()
                 .body(RemoteResponse.builder()

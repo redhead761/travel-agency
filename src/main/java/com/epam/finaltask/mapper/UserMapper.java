@@ -9,7 +9,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", uses = VoucherMapper.class)
 public interface UserMapper {
-    @Mapping(target = "user.password", ignore = true)
+    @Mapping(target = "password", ignore = true)
     UserDTO toUserDTO(User user);
 
     User toUser(UserDTO userDTO);
