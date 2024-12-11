@@ -10,9 +10,7 @@ import com.epam.finaltask.model.TourType;
 import com.epam.finaltask.model.TransferType;
 import com.epam.finaltask.model.VoucherStatus;
 import com.epam.finaltask.service.VoucherService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -27,8 +25,6 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RestController
 @RequestMapping("/vouchers")
 @RequiredArgsConstructor
-@Slf4j
-@Tag(name = "Voucher", description = "Voucher func")
 public class VoucherControllerImpl implements VoucherController {
 
     private final VoucherService voucherService;

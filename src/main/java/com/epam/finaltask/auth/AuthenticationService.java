@@ -12,8 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import static com.epam.finaltask.exception.StatusCodes.*;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor

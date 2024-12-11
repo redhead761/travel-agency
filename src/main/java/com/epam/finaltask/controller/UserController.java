@@ -6,10 +6,12 @@ import com.epam.finaltask.model.Role;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
 import java.util.UUID;
 
+@Tag(name = "User", description = "Users func")
 public interface UserController {
     @Operation(
             summary = "Register a new user",

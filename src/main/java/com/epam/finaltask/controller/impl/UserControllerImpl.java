@@ -6,9 +6,7 @@ import com.epam.finaltask.dto.UserDTO;
 import com.epam.finaltask.dto.group.OnCreate;
 import com.epam.finaltask.model.Role;
 import com.epam.finaltask.service.UserService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -23,8 +21,6 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-@Slf4j
-@Tag(name = "User", description = "Users func")
 public class UserControllerImpl implements UserController {
 
     private final UserService userService;

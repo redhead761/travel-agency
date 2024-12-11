@@ -9,10 +9,11 @@ import com.epam.finaltask.model.VoucherStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
 import java.util.UUID;
-
+@Tag(name = "Voucher", description = "Voucher func")
 public interface VoucherController {
     @Operation(
             summary = "Get all vouchers",
