@@ -1,7 +1,8 @@
 package com.epam.finaltask.auth;
 
 import com.epam.finaltask.config.JwtService;
-import com.epam.finaltask.exception.EntityNotFoundException;
+import com.epam.finaltask.exception.PasswordException;
+import com.epam.finaltask.exception.UserException;
 import com.epam.finaltask.model.User;
 import com.epam.finaltask.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +27,10 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
 
         User user = userRepository.findUserByUsername(request.getUsername())
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND.name(), "This user does not exist"));
+                .orElseThrow(() -> new UserException(request.getUsername()));
 
         if (!(passwordEncoder.matches(request.getPassword(), user.getPassword()))) {
-            throw new EntityNotFoundException(INVALID_DATA.name(), "Wrong password. Please try again");
+            throw new PasswordException();
         }
 
         authenticationManager.authenticate(

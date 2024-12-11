@@ -10,7 +10,7 @@ public interface UserService {
 
     UserDTO updateUser(UUID id, UserDTO userDTO);
 
-    UserDTO changeRole(UUID id, String role);
+    UserDTO changeRole(UUID id, Role role);
 
     UserDTO changeAccountStatus(UUID id, boolean accountStatus);
 

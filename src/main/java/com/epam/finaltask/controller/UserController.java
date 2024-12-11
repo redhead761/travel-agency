@@ -59,7 +59,7 @@ public interface UserController {
             @ApiResponse(responseCode = "200", description = "User role successfully updated"),
             @ApiResponse(responseCode = "400", description = "Validation error, e.g., invalid input or role")
     })
-    ResponseEntity<RemoteResponse> changeRole(UUID id, String role);
+    ResponseEntity<RemoteResponse> changeRole(UUID id, Role role);
 
 
 }

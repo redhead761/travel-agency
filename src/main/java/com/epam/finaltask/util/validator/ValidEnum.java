@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 public @interface ValidEnum {
     Class<? extends Enum<?>> value();
 
-    String message() default "Invalid value";
+    String message();
 
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

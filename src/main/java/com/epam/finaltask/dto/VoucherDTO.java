@@ -1,7 +1,13 @@
 package com.epam.finaltask.dto;
 
+import com.epam.finaltask.dto.group.OnChange;
 import com.epam.finaltask.dto.group.OnCreate;
 import com.epam.finaltask.dto.group.OnUpdate;
+import com.epam.finaltask.model.HotelType;
+import com.epam.finaltask.model.TourType;
+import com.epam.finaltask.model.TransferType;
+import com.epam.finaltask.model.VoucherStatus;
+import com.epam.finaltask.util.validator.ValidEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -32,15 +38,23 @@ public class VoucherDTO {
     private Double price;
 
     @NotBlank(groups = {OnCreate.class, OnUpdate.class}, message = "Tour type is required field")
+    @ValidEnum(value = TourType.class,
+            message = "Invalid value ${validatedValue} for parameter tourType. Expected type: TourType.")
     private String tourType;
 
     @NotBlank(groups = {OnCreate.class, OnUpdate.class}, message = "Transfer type is required field")
+    @ValidEnum(value = TransferType.class,
+            message = "Invalid value ${validatedValue} for parameter transferType. Expected type: TransferType.")
     private String transferType;
 
     @NotBlank(groups = {OnCreate.class, OnUpdate.class}, message = "Hotel type is required field")
+    @ValidEnum(value = HotelType.class,
+            message = "Invalid value ${validatedValue} for parameter hotelType. Expected type: HotelType.")
     private String hotelType;
 
-    @NotBlank(groups = {OnCreate.class, OnUpdate.class}, message = "Status is required field")
+    @NotBlank(groups = {OnChange.class, OnUpdate.class}, message = "Status is required field")
+    @ValidEnum(groups = {OnChange.class, OnUpdate.class}, value = VoucherStatus.class,
+            message = "Invalid value ${validatedValue} for parameter status. Expected type: VoucherStatus.")
     private String status;
 
     @NotNull(groups = {OnCreate.class, OnUpdate.class}, message = "Arrival date is required field")
@@ -51,5 +65,5 @@ public class VoucherDTO {
 
     private UUID userId;
 
-    private String isHot;
+    private String hot;
 }

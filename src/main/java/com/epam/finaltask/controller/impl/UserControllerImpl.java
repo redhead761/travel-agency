@@ -3,11 +3,9 @@ package com.epam.finaltask.controller.impl;
 import com.epam.finaltask.controller.UserController;
 import com.epam.finaltask.dto.RemoteResponse;
 import com.epam.finaltask.dto.UserDTO;
-import com.epam.finaltask.dto.group.OnChange;
 import com.epam.finaltask.dto.group.OnCreate;
 import com.epam.finaltask.model.Role;
 import com.epam.finaltask.service.UserService;
-import com.epam.finaltask.util.validator.ValidEnum;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -99,7 +97,7 @@ public class UserControllerImpl implements UserController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @PatchMapping("/{id}/role")
     public ResponseEntity<RemoteResponse> changeRole(@PathVariable UUID id,
-                                                     @RequestParam String role) {
+                                                     @RequestParam Role role) {
         UserDTO updatedUserDto = userService.changeRole(id, role);
 
         return ResponseEntity.ok()

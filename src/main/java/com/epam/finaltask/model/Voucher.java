@@ -5,12 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -51,5 +49,6 @@ public class Voucher implements BaseEntity<UUID> {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    private boolean isHot;
+    @Column(name = "is_hot")
+    private boolean hot;
 }

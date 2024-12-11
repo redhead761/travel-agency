@@ -34,7 +34,8 @@ public class UserDTO {
     private String username;
 
     @NotNull(groups = {OnChange.class})
-    @ValidEnum(groups = {OnChange.class}, value = Role.class)
+    @ValidEnum(groups = {OnChange.class}, value = Role.class,
+            message = "Invalid value ${validatedValue} for parameter role. Expected type: Role.")
     private String role;
 
     private List<VoucherDTO> vouchers;

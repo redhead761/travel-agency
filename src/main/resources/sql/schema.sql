@@ -21,7 +21,7 @@ CREATE TABLE voucher
     status        VARCHAR(50)  NOT NULL,
     arrival_date  DATE         NOT NULL,
     eviction_date DATE         NOT NULL,
-    user_id       CHAR(32),
+    user_id       CHAR(36),
     is_hot        BOOLEAN      NOT NULL DEFAULT FALSE,
     FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE
 );

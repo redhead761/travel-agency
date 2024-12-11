@@ -4,7 +4,7 @@ import com.epam.finaltask.auth.AuthenticationRequest;
 import com.epam.finaltask.auth.AuthenticationResponse;
 import com.epam.finaltask.auth.AuthenticationService;
 import com.epam.finaltask.config.JwtService;
-import com.epam.finaltask.exception.EntityNotFoundException;
+import com.epam.finaltask.exception.PasswordException;
 import com.epam.finaltask.model.Role;
 import com.epam.finaltask.model.User;
 import com.epam.finaltask.repository.UserRepository;
@@ -87,7 +87,7 @@ public class AuthenticationServiceTest {
 
         when(userRepository.findUserByUsername(userName)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> authenticationService.authenticate(request));
+        assertThrows(PasswordException.class, () -> authenticationService.authenticate(request));
     }
 
     @Test
@@ -96,7 +96,7 @@ public class AuthenticationServiceTest {
         AuthenticationRequest request = new AuthenticationRequest("Admin", "cookie");
 
         when(userRepository.findUserByUsername("Admin")).thenReturn(Optional.of(new User()));
-        assertThrows(EntityNotFoundException.class, () -> authenticationService.authenticate(request));
+        assertThrows(PasswordException.class, () -> authenticationService.authenticate(request));
     }
 
 }

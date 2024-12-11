@@ -1,9 +1,7 @@
 package com.epam.finaltask.service;
 
 import com.epam.finaltask.dto.UserDTO;
-import com.epam.finaltask.exception.EntityAlreadyExistsException;
-import com.epam.finaltask.exception.EntityNotFoundException;
-import com.epam.finaltask.exception.EnumNotFoundException;
+import com.epam.finaltask.exception.UserException;
 import com.epam.finaltask.mapper.UserMapper;
 import com.epam.finaltask.model.Role;
 import com.epam.finaltask.model.User;
@@ -15,8 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
-
-import static com.epam.finaltask.exception.StatusCodes.*;
 
 @Transactional
 @Service
@@ -43,8 +39,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO updateUser(UUID id, UserDTO userDTO) {
-        User userToUpdate = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND.name(), "User not found"));
+        User userToUpdate = userRepository.findById(id).orElseThrow(() -> new UserException(id));
 
         isUniqueUsername(userDTO.getUsername());
 
@@ -57,23 +52,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO changeRole(UUID id, String role) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND.name(), "User not found"));
-
-        try {
-            user.setRole(Role.valueOf(role.toUpperCase()));
-            User updatedUser = userRepository.save(user);
-            return userMapper.toUserDTO(updatedUser);
-        } catch (IllegalArgumentException e) {
-            throw new EnumNotFoundException("Enum value not found");
-        }
+    public UserDTO changeRole(UUID id, Role role) {
+        User user = userRepository.findById(id).orElseThrow(() -> new UserException(id));
+        user.setRole(role);
+        User updatedUser = userRepository.save(user);
+        return userMapper.toUserDTO(updatedUser);
     }
 
     @Override
     public UserDTO changeAccountStatus(UUID id, boolean accountStatus) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND.name(), "User not found"));
+        User user = userRepository.findById(id).orElseThrow(() -> new UserException(id));
 
         user.setAccountStatus(accountStatus);
         User updatedUser = userRepository.save(user);
@@ -84,14 +72,13 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     @Override
     public UserDTO getUserById(UUID id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND.name(), "User not found"));
+        User user = userRepository.findById(id).orElseThrow(() -> new UserException(id));
         return userMapper.toUserDTO(user);
     }
 
     private void isUniqueUsername(String username) {
         if (userRepository.existsByUsername(username)) {
-            throw new EntityAlreadyExistsException(DUPLICATE_USERNAME.name(), "This username is already exist");
+            throw new UserException(username);
         }
     }
 }
