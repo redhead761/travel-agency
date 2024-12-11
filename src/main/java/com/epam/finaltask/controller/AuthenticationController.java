@@ -5,8 +5,10 @@ import com.epam.finaltask.dto.RemoteResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
+@Tag(name = "Authentication", description = "Users authentication")
 public interface AuthenticationController {
     @Operation(summary = "User authentication",
             description = "Authenticates the user and returns a JWT token.")
@@ -18,4 +20,12 @@ public interface AuthenticationController {
             @ApiResponse(responseCode = "500", description = "Unexpected internal error")
     })
     ResponseEntity<RemoteResponse> authenticate(AuthenticationRequest credentials);
+
+    @Operation(summary = "User logout",
+            description = "Logs out the user and invalidates the JWT token.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Logout successful"),
+            @ApiResponse(responseCode = "400", description = "Bad request")
+    })
+    void logout(String authorization);
 }

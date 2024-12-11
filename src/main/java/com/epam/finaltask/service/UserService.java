@@ -15,4 +15,6 @@ public interface UserService {
     UserDTO changeAccountStatus(UUID id, boolean accountStatus);
 
     UserDTO getUserById(UUID id);
+
+    void createAdmin(String adminName, String adminPassword);
 }

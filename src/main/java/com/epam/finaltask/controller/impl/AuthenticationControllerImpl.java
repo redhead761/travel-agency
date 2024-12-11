@@ -5,7 +5,6 @@ import com.epam.finaltask.auth.AuthenticationResponse;
 import com.epam.finaltask.auth.AuthenticationService;
 import com.epam.finaltask.controller.AuthenticationController;
 import com.epam.finaltask.dto.RemoteResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +23,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "Authentication", description = "Users authentication")
+
 public class AuthenticationControllerImpl implements AuthenticationController {
 
     private final AuthenticationService service;
@@ -42,6 +41,12 @@ public class AuthenticationControllerImpl implements AuthenticationController {
                         .statusMessage(SUCCESSFULLY_AUTHENTICATE)
                         .results(List.of(response.getBody()))
                         .build());
+    }
+
+    @Override
+    @PostMapping("/logout")
+    public void logout(String authorization) {
+
     }
 }
 

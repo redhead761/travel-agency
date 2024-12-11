@@ -81,7 +81,6 @@ public class UserControllerImpl implements UserController {
     @PatchMapping("/{id}/status")
     public ResponseEntity<RemoteResponse> changeUserAccountStatus(@PathVariable UUID id,
                                                                   @RequestParam boolean accountStatus) {
-        //UserDTO updatedUserDto = userService.updateUser(username, accountStatus);
         UserDTO updatedUserDto = userService.changeAccountStatus(id, accountStatus);
 
         return ResponseEntity.ok()
