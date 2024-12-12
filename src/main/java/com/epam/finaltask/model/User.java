@@ -12,6 +12,7 @@ import org.hibernate.type.SqlTypes;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -40,9 +41,9 @@ public class User implements BaseEntity<UUID>, UserDetails {
 
     private String phoneNumber;
 
-    private Double balance;
+    private BigDecimal balance;
 
-    private boolean accountStatus;
+    private boolean active;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -56,7 +57,7 @@ public class User implements BaseEntity<UUID>, UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return isAccountStatus();
+        return isActive();
     }
 
     @Override

@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -37,7 +38,7 @@ public class UserDTO {
             message = "Phone number must contain only numbers")
     private String phoneNumber;
 
-    private Double balance;
+    private BigDecimal balance;
 
-    private boolean accountStatus;
+    private boolean active;
 }

@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -29,7 +30,7 @@ public class VoucherDTO {
     private String description;
 
     @NotNull(groups = {OnCreate.class, OnUpdate.class}, message = "Price is required field")
-    private Double price;
+    private BigDecimal price;
 
     @NotBlank(groups = {OnCreate.class, OnUpdate.class}, message = "Tour type is required field")
     private String tourType;

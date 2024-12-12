@@ -9,6 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -29,7 +30,7 @@ public class Voucher implements BaseEntity<UUID> {
 
     private String description;
 
-    private Double price;
+    private BigDecimal price;
 
     @Enumerated(EnumType.STRING)
     private TourType tourType;
