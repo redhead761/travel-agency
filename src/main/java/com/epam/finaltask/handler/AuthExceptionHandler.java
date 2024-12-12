@@ -1,4 +1,4 @@
-package com.epam.finaltask.exception;
+package com.epam.finaltask.handler;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;

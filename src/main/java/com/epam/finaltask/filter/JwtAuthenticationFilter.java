@@ -1,5 +1,6 @@
-package com.epam.finaltask.config;
+package com.epam.finaltask.filter;
 
+import com.epam.finaltask.security.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

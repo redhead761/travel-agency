@@ -1,5 +1,6 @@
 package com.epam.finaltask.config;
 
+import com.epam.finaltask.filter.JwtAuthenticationFilter;
 import com.epam.finaltask.security.UnauthorizedAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

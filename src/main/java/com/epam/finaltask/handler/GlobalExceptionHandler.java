@@ -1,8 +1,7 @@
-package com.epam.finaltask.exception;
+package com.epam.finaltask.handler;
 
-import com.epam.finaltask.dto.RemoteResponse;
+import com.epam.finaltask.exception.TravelAgencyException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import static com.epam.finaltask.exception.StatusCodes.EXCEPTION;
-import static com.epam.finaltask.exception.StatusCodes.INVALID_DATA;
 
 @Slf4j
 @RestControllerAdvice

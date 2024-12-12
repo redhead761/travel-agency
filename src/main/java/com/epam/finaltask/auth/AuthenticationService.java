@@ -1,6 +1,6 @@
 package com.epam.finaltask.auth;
 
-import com.epam.finaltask.config.JwtService;
+import com.epam.finaltask.security.JwtService;
 import com.epam.finaltask.exception.PasswordException;
 import com.epam.finaltask.exception.UserException;
 import com.epam.finaltask.model.User;

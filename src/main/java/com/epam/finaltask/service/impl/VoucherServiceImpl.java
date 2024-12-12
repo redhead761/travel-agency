@@ -1,4 +1,4 @@
-package com.epam.finaltask.service;
+package com.epam.finaltask.service.impl;
 
 import com.epam.finaltask.dto.VoucherDTO;
 import com.epam.finaltask.exception.UserException;
@@ -7,6 +7,7 @@ import com.epam.finaltask.mapper.VoucherMapper;
 import com.epam.finaltask.model.*;
 import com.epam.finaltask.repository.UserRepository;
 import com.epam.finaltask.repository.VoucherRepository;
+import com.epam.finaltask.service.VoucherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
