@@ -40,5 +40,5 @@ public class UserDTO {
 
     private BigDecimal balance;
 
-    private boolean active;
+    private boolean accountStatus;
 }

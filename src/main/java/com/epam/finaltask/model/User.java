@@ -43,7 +43,7 @@ public class User implements BaseEntity<UUID>, UserDetails {
 
     private BigDecimal balance;
 
-    private boolean active;
+    private boolean accountStatus;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -57,7 +57,7 @@ public class User implements BaseEntity<UUID>, UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return isActive();
+        return isAccountStatus();
     }
 
     @Override
