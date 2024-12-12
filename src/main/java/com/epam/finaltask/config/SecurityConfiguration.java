@@ -1,5 +1,6 @@
 package com.epam.finaltask.config;
 
+import com.epam.finaltask.security.UnauthorizedAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +26,7 @@ public class SecurityConfiguration {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
+    private final UnauthorizedAuthenticationEntryPoint entryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -45,6 +47,8 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/auth/login", "/users/register").permitAll()
                         .anyRequest().authenticated()
                 )
+                .exceptionHandling(exceptionHandling ->
+                        exceptionHandling.authenticationEntryPoint(entryPoint))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

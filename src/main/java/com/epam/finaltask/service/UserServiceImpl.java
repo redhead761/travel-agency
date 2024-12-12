@@ -78,13 +78,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createAdmin(String adminName, String adminPassword) {
-        User admin = User.builder()
-                .username(adminName)
-                .password(passwordEncoder.encode(adminPassword))
-                .role(Role.ADMIN)
-                .accountStatus(true)
-                .build();
-        userRepository.save(admin);
+        if (!userRepository.existsByUsername(adminName)) {
+            User admin = User.builder()
+                    .username(adminName)
+                    .password(passwordEncoder.encode(adminPassword))
+                    .role(Role.ADMIN)
+                    .accountStatus(true)
+                    .build();
+            userRepository.save(admin);
+        }
     }
 
     private void isUniqueUsername(String username) {

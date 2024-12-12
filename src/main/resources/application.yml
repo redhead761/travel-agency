@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/travel_agency
+    username: root
+    password: pass
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        show_sql: true
+
+application:
+  security:
+    jwt:
+      secret-key: 5E6F79705A3432676F334C386272462F3561767330507A56646A706844764F69
+      expiration: 86400000
+
+security:
+  bcrypt:
+    strength: 10
+  admin:
+    name: admin
+    password: Password1234
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level --- [%thread] %logger{36} : [Transaction ID: %X{transactionId:-NO TRANSACTION}] [User ID: %X{userId:-NO USER ID}] [Message: %msg]%n"
