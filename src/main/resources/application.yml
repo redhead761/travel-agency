@@ -1,28 +1,110 @@
 spring:
+  config:
+    import: "optional:file:.env[.properties]"
+  profiles:
+    default: dev
   datasource:
-    driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/travel_agency
-    username: root
-    password: pass
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
-        show_sql: true
+    hibernate:
+      ddl-auto: none
+  liquibase:
+    enabled: true
+    change-log: ${CHANGE_LOG}
 
-application:
-  security:
-    jwt:
-      secret-key: 5E6F79705A3432676F334C386272462F3561767330507A56646A706844764F69
-      expiration: 86400000
-
-security:
-  bcrypt:
-    strength: 10
-  admin:
-    name: admin
-    password: Password1234
+server:
+  port: ${SERVER_PORT}
+  servlet:
+    context-path: ${SERVER_CONTEXT_PATH}
 
 logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} %-5level --- [%thread] %logger{36} : [Transaction ID: %X{transactionId:-NO TRANSACTION}] [User ID: %X{userId:-NO USER ID}] [Message: %msg]%n"
+
+security:
+  bcrypt:
+    strength: ${BCRYPT_STRENGTH}
+  jwt:
+    secret-key: ${JWT_KEY}
+    expiration-time: ${JWT_EXPIRATION_TIME}
+  admin:
+    name: ${ADMIN_NAME}
+    password: ${ADMIN_PASSWORD}
+
+
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: ${ENDPOINTS}
+  endpoint:
+    health:
+      enabled: ${HEALTH_ENABLED}
+      show-details: ${HEALTH_DETAILS}
+    info:
+      enabled: ${INFO_ENABLED}
+    prometheus:
+      enabled: ${PROMETHEUS_ENABLED}
+    loggers:
+      enabled: ${LOGGERS_ENABLED}
+    mappings:
+      enabled: ${MAPPINGS_ENABLED}
+    env:
+      enabled: ${ENV_ENABLED}
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  info:
+    env:
+      enabled: true
+info:
+  app:
+    name: @project.name@
+    description: @project.description@
+    version: @project.version@
+    java:
+      version: @java.version@
+    build-timestamp: @maven.build.timestamp@
+  build:
+    description: ${APP_VERSION}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+    import: "optional:file:.env-dev[.properties]"
+logging:
+  level:
+    com.epam.finaltask: DEBUG
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+    import: "optional:file:.env-prod[.properties]"
+
+server:
+  error:
+    include-message: always
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+    import: "optional:file:.env-test[.properties]"
+  h2:
+    console:
+      enabled: true
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+logging:
+  level:
+    com.epam.finaltask: DEBUG
