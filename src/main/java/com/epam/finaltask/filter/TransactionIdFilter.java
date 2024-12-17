@@ -49,7 +49,7 @@ public class TransactionIdFilter  implements Filter {
             return "ADMIN";
         }
 
-        return userRepository.findUserByUsername(username)
+        return userRepository.findByUsername(username)
                 .map(user -> String.valueOf(user.getId()))
                 .orElse("USER NOT FOUND");
     }

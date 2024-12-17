@@ -1,5 +1,6 @@
 package com.epam.finaltask.service.impl;
 
+import com.epam.finaltask.dto.TravelAgencyUserDetails;
 import com.epam.finaltask.dto.UserDTO;
 import com.epam.finaltask.exception.EntityAlreadyExistsException;
 import com.epam.finaltask.exception.UserException;
@@ -102,8 +103,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new UserException(username));
+        return new TravelAgencyUserDetails(userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserException(username)));
     }
 }
 

@@ -1,6 +1,6 @@
 package com.epam.finaltask.service;
 
-import com.epam.finaltask.auth.AuthenticationRequest;
+import com.epam.finaltask.dto.Credentials;
 import com.epam.finaltask.auth.AuthenticationResponse;
 import com.epam.finaltask.auth.AuthenticationService;
 import com.epam.finaltask.security.JwtService;
@@ -48,7 +48,7 @@ public class AuthenticationServiceTest {
         String password = "password";
         Role role = Role.ADMIN;
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest(userName, password);
+        Credentials authenticationRequest = new Credentials(userName, password);
 
         User expectedUser = new User(
                 id,
@@ -61,7 +61,7 @@ public class AuthenticationServiceTest {
                 true
         );
 
-        when(userRepository.findUserByUsername(userName)).thenReturn(Optional.of(expectedUser));
+        when(userRepository.findByUsername(userName)).thenReturn(Optional.of(expectedUser));
         when(jwtService.generateToken(expectedUser)).thenReturn("Token");
         when(passwordEncoder.matches(password, password)).thenReturn(true);
         when(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -73,7 +73,7 @@ public class AuthenticationServiceTest {
         AuthenticationResponse actualResponse = authenticationService.authenticate(authenticationRequest);
 
         assertEquals(expectedResponse, actualResponse);
-        verify(userRepository, times(1)).findUserByUsername(userName);
+        verify(userRepository, times(1)).findByUsername(userName);
 
     }
 
@@ -83,9 +83,9 @@ public class AuthenticationServiceTest {
         String userName = "Robin";
         String password = "password";
 
-        AuthenticationRequest request = new AuthenticationRequest(userName, password);
+        Credentials request = new Credentials(userName, password);
 
-        when(userRepository.findUserByUsername(userName)).thenReturn(Optional.empty());
+        when(userRepository.findByUsername(userName)).thenReturn(Optional.empty());
 
         assertThrows(PasswordException.class, () -> authenticationService.authenticate(request));
     }
@@ -93,9 +93,9 @@ public class AuthenticationServiceTest {
     @Test
     void testCheckLoginData_InvalidPassword() {
 
-        AuthenticationRequest request = new AuthenticationRequest("Admin", "cookie");
+        Credentials request = new Credentials("Admin", "cookie");
 
-        when(userRepository.findUserByUsername("Admin")).thenReturn(Optional.of(new User()));
+        when(userRepository.findByUsername("Admin")).thenReturn(Optional.of(new User()));
         assertThrows(PasswordException.class, () -> authenticationService.authenticate(request));
     }
 

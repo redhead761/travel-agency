@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -34,6 +35,8 @@ public class AuthExceptionHandler {
     private static final String JWT_EXCEPTION = "JWT Exception";
     private static final String AUTHENTICATION_EXCEPTION = "Authentication Exception";
     private static final String LOG_MESSAGE = "ErrorId: {}, {}: {}";
+    private static final String DISABLED_EXCEPTION = "Disabled Exception";
+    private static final String DISABLED_MESSAGE = "Account is disabled";
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Map<String, Object>> handleAuthenticationException(AuthenticationException e) {
@@ -41,6 +44,14 @@ public class AuthExceptionHandler {
         logError(errorId, AUTHENTICATION_EXCEPTION, e.getMessage());
 
         return createUnauthResponseEntity(WRONG_USERNAME_OR_PASSWORD, errorId);
+    }
+
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<Map<String, Object>> handleDisabledException(DisabledException e) {
+        String errorId = UUID.randomUUID().toString();
+        logError(errorId, DISABLED_EXCEPTION, e.getMessage());
+
+        return createUnauthResponseEntity(DISABLED_MESSAGE, errorId);
     }
 
     @ExceptionHandler(ExpiredJwtException.class)

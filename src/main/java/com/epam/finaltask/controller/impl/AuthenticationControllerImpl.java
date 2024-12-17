@@ -1,6 +1,6 @@
 package com.epam.finaltask.controller.impl;
 
-import com.epam.finaltask.auth.AuthenticationRequest;
+import com.epam.finaltask.dto.Credentials;
 import com.epam.finaltask.auth.AuthenticationResponse;
 import com.epam.finaltask.auth.AuthenticationService;
 import com.epam.finaltask.controller.AuthenticationController;
@@ -30,7 +30,7 @@ public class AuthenticationControllerImpl implements AuthenticationController {
     @Override
     @PostMapping("/login")
     public ResponseEntity<RemoteResponse> authenticate(
-            @RequestBody @Valid AuthenticationRequest credentials) {
+            @RequestBody @Valid Credentials credentials) {
         ResponseEntity<AuthenticationResponse> response = ResponseEntity.ok(service.authenticate(credentials));
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .body(RemoteResponse.builder()

@@ -1,6 +1,6 @@
 package com.epam.finaltask.controller;
 
-import com.epam.finaltask.auth.AuthenticationRequest;
+import com.epam.finaltask.dto.Credentials;
 import com.epam.finaltask.auth.AuthenticationResponse;
 import com.epam.finaltask.auth.AuthenticationService;
 //import com.epam.finaltask.config.JwtServiceTestConfig;
@@ -47,7 +47,7 @@ public class AuthenticationControllerTest {
         String expectedStatusCode = "OK";
         String expectedStatusMessage = "User is successfully authenticated";
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest("admin", "Password");
+        Credentials authenticationRequest = new Credentials("admin", "Password");
         AuthenticationResponse authenticationResponse = new AuthenticationResponse("access token");
 
         when(authenticationService.authenticate(authenticationRequest)).thenReturn(authenticationResponse);

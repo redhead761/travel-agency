@@ -11,3 +11,9 @@ databaseChangeLog:
       changes:
         - sqlFile:
             path: db/changelog/mysql/database-filling.sql
+  - changeSet:
+      id: AddJwtBlackListTable
+      author: oleksandr.panchenko
+      changes:
+        - sqlFile:
+            path: db/changelog/mysql/add-jwt-bl.sql
