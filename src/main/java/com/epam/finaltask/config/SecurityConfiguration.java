@@ -26,7 +26,7 @@ import org.springframework.web.cors.CorsConfiguration;
 public class SecurityConfiguration {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
-    private final AuthenticationProvider authenticationProvider;
+//    private final AuthenticationProvider authenticationProvider;
     private final UnauthorizedAuthenticationEntryPoint entryPoint;
 
     @Bean
@@ -34,7 +34,7 @@ public class SecurityConfiguration {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration configuration = new CorsConfiguration();
-                    configuration.setAllowCredentials(true);
+                    configuration.setAllowCredentials(false);
                     configuration.addAllowedOrigin("*");
                     configuration.addAllowedHeader("*");
                     configuration.addAllowedMethod("*");
@@ -50,7 +50,7 @@ public class SecurityConfiguration {
                 )
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling.authenticationEntryPoint(entryPoint))
-                .authenticationProvider(authenticationProvider)
+//                .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

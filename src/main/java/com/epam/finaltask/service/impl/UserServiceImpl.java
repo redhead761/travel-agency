@@ -1,6 +1,7 @@
 package com.epam.finaltask.service.impl;
 
 import com.epam.finaltask.dto.UserDTO;
+import com.epam.finaltask.exception.EntityAlreadyExistsException;
 import com.epam.finaltask.exception.UserException;
 import com.epam.finaltask.mapper.UserMapper;
 import com.epam.finaltask.model.Role;
@@ -9,6 +10,9 @@ import com.epam.finaltask.repository.UserRepository;
 import com.epam.finaltask.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +23,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -92,8 +96,14 @@ public class UserServiceImpl implements UserService {
 
     private void isUniqueUsername(String username) {
         if (userRepository.existsByUsername(username)) {
-            throw new UserException(username);
+            throw new EntityAlreadyExistsException(username);
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new UserException(username));
     }
 }
 
