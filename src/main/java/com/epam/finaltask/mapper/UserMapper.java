@@ -5,8 +5,6 @@ import com.epam.finaltask.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import java.util.List;
-
 @Mapper(componentModel = "spring", uses = VoucherMapper.class)
 public interface UserMapper {
     @Mapping(target = "password", ignore = true)

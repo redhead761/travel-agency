@@ -63,9 +63,7 @@ public class VoucherControllerImpl implements VoucherController {
     @Override
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
-    public ResponseEntity<RemoteResponse> createVoucher(
-            @Validated(OnCreate.class) @RequestBody VoucherDTO voucherDTO) {
-
+    public ResponseEntity<RemoteResponse> createVoucher(@Validated(OnCreate.class) @RequestBody VoucherDTO voucherDTO) {
         VoucherDTO createdVoucherDto = voucherService.create(voucherDTO);
 
         return ResponseEntity.status(CREATED).
@@ -79,8 +77,7 @@ public class VoucherControllerImpl implements VoucherController {
 
     @Override
     @PatchMapping("/{id}/order")
-    public ResponseEntity<RemoteResponse> creatOrder(@PathVariable UUID id,
-                                                     @RequestParam UUID userId) {
+    public ResponseEntity<RemoteResponse> creatOrder(@PathVariable UUID id, @RequestParam UUID userId) {
         VoucherDTO orderedVoucherDto = voucherService.order(id, userId);
 
         return ResponseEntity.ok()
@@ -95,9 +92,8 @@ public class VoucherControllerImpl implements VoucherController {
     @Override
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<RemoteResponse> updateVoucher(
-            @PathVariable UUID id,
-            @Validated(OnUpdate.class) @RequestBody VoucherDTO voucherDTO) {
+    public ResponseEntity<RemoteResponse> updateVoucher(@PathVariable UUID id,
+                                                        @Validated(OnUpdate.class) @RequestBody VoucherDTO voucherDTO) {
         VoucherDTO updatedVoucherDto = voucherService.update(id, voucherDTO);
 
         return ResponseEntity.ok()
@@ -127,8 +123,7 @@ public class VoucherControllerImpl implements VoucherController {
     @Override
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER')")
     @PatchMapping("/{id}/hot")
-    public ResponseEntity<RemoteResponse> changeHotStatus(@PathVariable UUID id,
-                                                          @RequestParam boolean status) {
+    public ResponseEntity<RemoteResponse> changeHotStatus(@PathVariable UUID id, @RequestParam boolean status) {
         VoucherDTO updatedVoucherDto = voucherService.changeHotStatus(id, status);
 
         return ResponseEntity.ok()
@@ -143,8 +138,7 @@ public class VoucherControllerImpl implements VoucherController {
     @Override
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER')")
     @PatchMapping("/{id}/status")
-    public ResponseEntity<RemoteResponse> changeVoucherStatus(@PathVariable UUID id,
-                                                              @RequestParam VoucherStatus status) {
+    public ResponseEntity<RemoteResponse> changeVoucherStatus(@PathVariable UUID id, @RequestParam VoucherStatus status) {
         VoucherDTO updatedVoucherDto = voucherService.changeTourStatus(id, status);
 
         return ResponseEntity.ok()

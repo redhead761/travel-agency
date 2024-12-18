@@ -2,7 +2,7 @@ package com.epam.finaltask.service.impl;
 
 import com.epam.finaltask.dto.TravelAgencyUserDetails;
 import com.epam.finaltask.dto.UserDTO;
-import com.epam.finaltask.exception.EntityAlreadyExistsException;
+import com.epam.finaltask.exception.UsernameAlreadyExistsException;
 import com.epam.finaltask.exception.UserException;
 import com.epam.finaltask.mapper.UserMapper;
 import com.epam.finaltask.model.Role;
@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private void isUniqueUsername(String username) {
         if (userRepository.existsByUsername(username)) {
-            throw new EntityAlreadyExistsException(username);
+            throw new UsernameAlreadyExistsException(username);
         }
     }
 

@@ -30,8 +30,7 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @PostMapping("/register")
-    public ResponseEntity<RemoteResponse> registerUser(@Validated(OnCreate.class)
-                                                       @RequestBody UserDTO userDto) {
+    public ResponseEntity<RemoteResponse> registerUser(@Validated(OnCreate.class) @RequestBody UserDTO userDto) {
         UserDTO createdUserDto = userService.register(userDto);
 
         return ResponseEntity.status(CREATED)

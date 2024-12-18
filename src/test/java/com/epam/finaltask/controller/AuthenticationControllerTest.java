@@ -1,7 +1,7 @@
 package com.epam.finaltask.controller;
 
 import com.epam.finaltask.dto.Credentials;
-import com.epam.finaltask.auth.AuthenticationResponse;
+import com.epam.finaltask.dto.JwtTokenDto;
 import com.epam.finaltask.auth.AuthenticationService;
 //import com.epam.finaltask.config.JwtServiceTestConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,9 +48,9 @@ public class AuthenticationControllerTest {
         String expectedStatusMessage = "User is successfully authenticated";
 
         Credentials authenticationRequest = new Credentials("admin", "Password");
-        AuthenticationResponse authenticationResponse = new AuthenticationResponse("access token");
+        JwtTokenDto jwtTokenDto = new JwtTokenDto("access token");
 
-        when(authenticationService.authenticate(authenticationRequest)).thenReturn(authenticationResponse);
+        when(authenticationService.authenticate(authenticationRequest)).thenReturn(jwtTokenDto);
 
         mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -60,6 +60,6 @@ public class AuthenticationControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.statusCode").value(expectedStatusCode))
                 .andExpect(jsonPath("$.statusMessage").value(expectedStatusMessage))
-                .andExpect(jsonPath("$.results[0].access_token").value(authenticationResponse.getAccessToken()));
+                .andExpect(jsonPath("$.results[0].access_token").value(jwtTokenDto.getAccessToken()));
     }
 }

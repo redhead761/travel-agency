@@ -17,5 +17,6 @@ public @interface ValidEnum {
     String message();
 
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

@@ -1,7 +1,6 @@
 package com.epam.finaltask.service;
 
 import com.epam.finaltask.dto.VoucherDTO;
-import com.epam.finaltask.exception.EntityAlreadyExistsException;
 import com.epam.finaltask.model.HotelType;
 import com.epam.finaltask.model.TourType;
 import com.epam.finaltask.model.TransferType;
@@ -13,7 +12,7 @@ import java.util.UUID;
 public interface VoucherService {
     VoucherDTO create(VoucherDTO voucherDTO);
 
-    VoucherDTO order(UUID id, UUID userId) throws EntityAlreadyExistsException;
+    VoucherDTO order(UUID id, UUID userId);
 
     VoucherDTO update(UUID id, VoucherDTO voucherDTO);
 

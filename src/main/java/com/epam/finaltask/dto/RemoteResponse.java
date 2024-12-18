@@ -15,6 +15,6 @@ public class RemoteResponse {
     private boolean succeeded;
     private String statusCode;
     private String statusMessage;
-    private List results;
+    private List<?> results;
 }
 

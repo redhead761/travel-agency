@@ -1,4 +1,4 @@
-package com.epam.finaltask.auth;
+package com.epam.finaltask.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,8 +10,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationResponse {
-    @JsonProperty("access_token")
+public class JwtTokenDto {
+    @JsonProperty("token")
     private String accessToken;
 }
 

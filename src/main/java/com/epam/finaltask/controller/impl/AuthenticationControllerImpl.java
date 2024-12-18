@@ -1,7 +1,7 @@
 package com.epam.finaltask.controller.impl;
 
 import com.epam.finaltask.dto.Credentials;
-import com.epam.finaltask.auth.AuthenticationResponse;
+import com.epam.finaltask.dto.JwtTokenDto;
 import com.epam.finaltask.auth.AuthenticationService;
 import com.epam.finaltask.controller.AuthenticationController;
 import com.epam.finaltask.dto.RemoteResponse;
@@ -28,15 +28,15 @@ public class AuthenticationControllerImpl implements AuthenticationController {
 
     @Override
     @PostMapping("/login")
-    public ResponseEntity<RemoteResponse> authenticate(
-            @RequestBody @Valid Credentials credentials) {
-        ResponseEntity<AuthenticationResponse> response = ResponseEntity.ok(service.authenticate(credentials));
+    public ResponseEntity<RemoteResponse> authenticate(@RequestBody @Valid Credentials credentials) {
+        JwtTokenDto token = service.authenticate(credentials);
+
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .body(RemoteResponse.builder()
                         .succeeded(true)
                         .statusCode(OK.name())
                         .statusMessage(SUCCESSFULLY_AUTHENTICATE)
-                        .results(List.of(response.getBody()))
+                        .results(List.of(token))
                         .build());
     }
 

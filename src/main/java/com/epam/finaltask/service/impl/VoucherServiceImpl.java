@@ -78,10 +78,9 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public void delete(UUID id) {
-        voucherRepository.findById(id)
+        Voucher voucher = voucherRepository.findById(id)
                 .orElseThrow(() -> new VoucherException(id));
-
-        voucherRepository.deleteById(id);
+        voucherRepository.delete(voucher);
     }
 
     @Override
