@@ -35,6 +35,7 @@ public class User implements BaseEntity<UUID> {
 
     private String phoneNumber;
 
+    @Column(name = "balance", insertable = false, updatable = true)
     private Double balance;
 
     private boolean accountStatus;

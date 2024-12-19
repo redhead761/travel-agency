@@ -32,8 +32,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDTO register(UserDTO userDTO) {
-        isUniqueUsername(userDTO.getUsername());
-
         userDTO.setRole(Role.USER.name());
         userDTO.setAccountStatus(true);
         User newUser = userMapper.toUser(userDTO);
@@ -47,7 +45,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserDTO updateUser(UUID id, UserDTO userDTO) {
         User userToUpdate = userRepository.findById(id).orElseThrow(() -> new UserException(id));
 
-        isUniqueUsername(userDTO.getUsername());
+        checkUniqueUsername(userDTO.getUsername());
 
         userToUpdate.setUsername(userDTO.getUsername());
         userToUpdate.setPhoneNumber(userDTO.getPhoneNumber());
@@ -95,7 +93,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
-    private void isUniqueUsername(String username) {
+    private void checkUniqueUsername(String username) {
         if (userRepository.existsByUsername(username)) {
             throw new UsernameAlreadyExistsException(username);
         }

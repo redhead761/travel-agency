@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -53,7 +51,8 @@ public class GlobalExceptionHandler {
         String errorId = UUID.randomUUID().toString();
         logError(errorId, VALIDATION_ERROR, e.getMessage());
 
-        Map<String, Object> body = new HashMap<>(Map.of(TIMESTAMP, LocalDateTime.now(), ERROR_ID, errorId));
+
+        Map<String, Object> body = new LinkedHashMap<>(Map.of(TIMESTAMP, LocalDateTime.now(), ERROR_ID, errorId));
         body.putAll(e.getFieldErrors().stream()
                 .collect(Collectors.groupingBy(FieldError::getField,
                         Collectors.mapping(FieldError::getDefaultMessage, Collectors.toList()))));
@@ -74,7 +73,7 @@ public class GlobalExceptionHandler {
         String paramValue = e.getValue() == null ? "null" : e.getValue().toString();
         String requiredType = e.getRequiredType() != null ? e.getRequiredType().getSimpleName() : "Unknown";
 
-        return String.format("Invalid value '%s' for parameter '%s'. Expected type: %s.",
+        return String.format("Invalid value '%s' for parameter '%s'. Expected type: %s. !!!!TEST!!!!",
                 paramValue, paramName, requiredType);
     }
 

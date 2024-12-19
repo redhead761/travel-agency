@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public class UsernameAlreadyExistsException extends TravelAgencyException {
     public UsernameAlreadyExistsException(String username) {
-        super(HttpStatus.CONFLICT, "Username" + username + " is already exist");
+        super(HttpStatus.CONFLICT, "Username " + username + " is already exist");
     }
 }
 
