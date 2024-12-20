@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -49,12 +50,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException e) {
         String errorId = UUID.randomUUID().toString();
         logError(errorId, VALIDATION_ERROR, e.getMessage());
-
         Map<String, Object> body = new LinkedHashMap<>(Map.of(TIMESTAMP, LocalDateTime.now(), ERROR_ID, errorId));
         body.putAll(e.getFieldErrors().stream()
                 .collect(Collectors.groupingBy(FieldError::getField,
                         Collectors.mapping(FieldError::getDefaultMessage, Collectors.toList()))));
-
+        List<String> globalErrors = e.getGlobalErrors().stream()
+                .map(ObjectError::getDefaultMessage)
+                .toList();
+        if (!globalErrors.isEmpty()) body.put("validate class errors", globalErrors);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
@@ -67,24 +70,17 @@ public class GlobalExceptionHandler {
 
     private String getMessage(MethodArgumentTypeMismatchException e) {
         String paramName = e.getName();
-        String paramValue = e.getValue() == null ? "null" : e.getValue().toString();
-        String requiredType = e.getRequiredType() != null ? e.getRequiredType().getSimpleName() : "Unknown";
-        return String.format("Invalid value '%s' for parameter '%s'. Expected type: %s.",
-                paramValue, paramName, requiredType);
+        String paramValue = (e.getValue() != null) ? e.getValue().toString() : "null";
+        String requiredType = (e.getRequiredType() != null) ? e.getRequiredType().getSimpleName() : "Unknown";
+        return String.format("Invalid value '%s' for parameter '%s'. Expected type: %s.", paramValue, paramName, requiredType);
     }
 
     private void logError(String errorId, String exceptionType, String errorMessage) {
         log.error(LOG_MESSAGE, errorId, exceptionType, errorMessage);
     }
 
-    private ResponseEntity<Map<String, Object>> createResponseEntity(HttpStatusCode status,
-                                                                     String message,
-                                                                     String errorId) {
-        Map<String, Object> body = Map.of(
-                TIMESTAMP, LocalDateTime.now(),
-                MESSAGE, message,
-                ERROR_ID, errorId
-        );
+    private ResponseEntity<Map<String, Object>> createResponseEntity(HttpStatusCode status, String message, String errorId) {
+        Map<String, Object> body = Map.of(TIMESTAMP, LocalDateTime.now(), MESSAGE, message, ERROR_ID, errorId);
         return ResponseEntity.status(status).body(body);
     }
 }
