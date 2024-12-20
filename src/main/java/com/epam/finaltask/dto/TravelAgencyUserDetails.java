@@ -14,9 +14,11 @@ public class TravelAgencyUserDetails implements UserDetails {
     private final String username;
     private final String password;
     private final boolean isActive;
+    private final User user;
     private final Set<SimpleGrantedAuthority> authorities = new HashSet<>();
 
     public TravelAgencyUserDetails(User user) {
+        this.user = user;
         username = user.getUsername();
         password = user.getPassword();
         isActive = user.isAccountStatus();

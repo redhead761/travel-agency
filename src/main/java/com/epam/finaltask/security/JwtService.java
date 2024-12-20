@@ -1,5 +1,6 @@
 package com.epam.finaltask.security;
 
+import com.epam.finaltask.dto.TravelAgencyUserDetails;
 import com.epam.finaltask.model.JwtBlackList;
 import com.epam.finaltask.repository.JwtBlackListRepository;
 import io.jsonwebtoken.Claims;
@@ -38,12 +39,11 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
-
         return generateToken(new HashMap<>(), userDetails);
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return buildToken(extraClaims, userDetails, jwtExpiration);
+        return buildToken(extraClaims, (TravelAgencyUserDetails) userDetails, jwtExpiration);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
@@ -71,8 +71,10 @@ public class JwtService {
     }
 
     private String buildToken(Map<String, Object> extraClaims,
-                              UserDetails userDetails,
+                              TravelAgencyUserDetails userDetails,
                               long expiration) {
+        extraClaims.put("id", userDetails.getUser().getId());
+        extraClaims.put("role", userDetails.getUser().getRole());
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
@@ -100,8 +102,6 @@ public class JwtService {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-
-
 
 
 }
