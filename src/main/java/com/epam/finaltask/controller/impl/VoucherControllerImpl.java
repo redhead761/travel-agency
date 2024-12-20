@@ -37,20 +37,16 @@ public class VoucherControllerImpl implements VoucherController {
 
     @Override
     @GetMapping
-    public ResponseEntity<RemoteResponse> findAll(
-            @RequestParam(required = false) TourType tourType,
-            @RequestParam(required = false) TransferType transferType,
-            @RequestParam(required = false) HotelType hotelType,
-            @RequestParam(required = false) UUID userId,
-            @RequestParam(required = false) Double minPrice,
-            @RequestParam(required = false) Double maxPrice,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
-        List<VoucherDTO> result = voucherService.findAllByFilter(
-                tourType, transferType, hotelType,
+    public ResponseEntity<RemoteResponse> findAll(@RequestParam(required = false) TourType tourType,
+                                                  @RequestParam(required = false) TransferType transferType,
+                                                  @RequestParam(required = false) HotelType hotelType,
+                                                  @RequestParam(required = false) UUID userId,
+                                                  @RequestParam(required = false) Double minPrice,
+                                                  @RequestParam(required = false) Double maxPrice,
+                                                  @RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "10") int size) {
+        List<VoucherDTO> result = voucherService.findAllByFilter(tourType, transferType, hotelType,
                 userId, minPrice, maxPrice, page, size);
-
         return ResponseEntity.ok()
                 .body(RemoteResponse.builder()
                         .succeeded(true)
@@ -65,7 +61,6 @@ public class VoucherControllerImpl implements VoucherController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<RemoteResponse> createVoucher(@Validated(OnCreate.class) @RequestBody VoucherDTO voucherDTO) {
         VoucherDTO createdVoucherDto = voucherService.create(voucherDTO);
-
         return ResponseEntity.status(CREATED).
                 body(RemoteResponse.builder()
                         .succeeded(true)
@@ -79,7 +74,6 @@ public class VoucherControllerImpl implements VoucherController {
     @PatchMapping("/{id}/order")
     public ResponseEntity<RemoteResponse> creatOrder(@PathVariable UUID id, @RequestParam UUID userId) {
         VoucherDTO orderedVoucherDto = voucherService.order(id, userId);
-
         return ResponseEntity.ok()
                 .body(RemoteResponse.builder()
                         .succeeded(true)
@@ -95,7 +89,6 @@ public class VoucherControllerImpl implements VoucherController {
     public ResponseEntity<RemoteResponse> updateVoucher(@PathVariable UUID id,
                                                         @Validated(OnUpdate.class) @RequestBody VoucherDTO voucherDTO) {
         VoucherDTO updatedVoucherDto = voucherService.update(id, voucherDTO);
-
         return ResponseEntity.ok()
                 .body(RemoteResponse.builder()
                         .succeeded(true)
@@ -110,7 +103,6 @@ public class VoucherControllerImpl implements VoucherController {
     @DeleteMapping("/{id}")
     public ResponseEntity<RemoteResponse> deleteVoucher(@PathVariable UUID id) {
         voucherService.delete(id);
-
         return ResponseEntity.ok()
                 .body(RemoteResponse.builder()
                         .succeeded(true)
@@ -125,7 +117,6 @@ public class VoucherControllerImpl implements VoucherController {
     @PatchMapping("/{id}/hot")
     public ResponseEntity<RemoteResponse> changeHotStatus(@PathVariable UUID id, @RequestParam boolean status) {
         VoucherDTO updatedVoucherDto = voucherService.changeHotStatus(id, status);
-
         return ResponseEntity.ok()
                 .body(RemoteResponse.builder()
                         .succeeded(true)
@@ -140,7 +131,6 @@ public class VoucherControllerImpl implements VoucherController {
     @PatchMapping("/{id}/status")
     public ResponseEntity<RemoteResponse> changeVoucherStatus(@PathVariable UUID id, @RequestParam VoucherStatus status) {
         VoucherDTO updatedVoucherDto = voucherService.changeTourStatus(id, status);
-
         return ResponseEntity.ok()
                 .body(RemoteResponse.builder()
                         .succeeded(true)

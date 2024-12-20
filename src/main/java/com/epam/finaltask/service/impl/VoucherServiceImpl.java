@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +29,7 @@ public class VoucherServiceImpl implements VoucherService {
     private final VoucherRepository voucherRepository;
     private final UserRepository userRepository;
     private final VoucherMapper voucherMapper;
+    private static final String SORT_BY = "hot";
 
     @Override
     public VoucherDTO create(VoucherDTO voucherDTO) {
@@ -39,26 +41,70 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public VoucherDTO order(UUID voucherId, UUID userId) {
-        Voucher voucher = voucherRepository.findById(voucherId)
-                .orElseThrow(() -> new VoucherException(voucherId));
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserException(userId));
-
-        voucher.setUser(user);
-        voucher.setStatus(VoucherStatus.REGISTERED);
-        Voucher orderedVoucher = voucherRepository.save(voucher);
-
+        Voucher voucher = voucherRepository.findById(voucherId).orElseThrow(() -> new VoucherException(voucherId));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserException(userId));
+        Voucher orderedVoucher = addUserToVoucher(voucher, user);
+        addVoucherToUser(user, orderedVoucher);
         return voucherMapper.toVoucherDTO(orderedVoucher);
     }
 
+
     @Override
     public VoucherDTO update(UUID id, VoucherDTO voucherDTO) {
-        Voucher voucherForUpdate = voucherRepository.findById(id)
-                .orElseThrow(() -> new VoucherException(id));
-
+        Voucher voucherForUpdate = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id));
         Voucher newVoucher = voucherMapper.toVoucher(voucherDTO);
+        setVoucherFields(voucherForUpdate, newVoucher);
+        Voucher updatedVoucher = voucherRepository.save(voucherForUpdate);
+        return voucherMapper.toVoucherDTO(updatedVoucher);
+    }
 
+
+    @Override
+    public void delete(UUID id) {
+        Voucher voucher = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id));
+        voucherRepository.delete(voucher);
+    }
+
+    @Override
+    public VoucherDTO changeHotStatus(UUID id, boolean hotStatus) {
+        Voucher voucher = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id));
+        voucher.setHot(hotStatus);
+        return voucherMapper.toVoucherDTO(voucherRepository.save(voucher));
+    }
+
+    @Override
+    public VoucherDTO changeTourStatus(UUID id, VoucherStatus status) {
+        Voucher voucher = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id));
+        voucher.setStatus(status);
+        Voucher updatedVoucher = voucherRepository.save(voucher);
+        return voucherMapper.toVoucherDTO(updatedVoucher);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<VoucherDTO> findAllByFilter(TourType tourType, TransferType transferType, HotelType hotelType, UUID userId,
+                                            Double minPrice, Double maxPrice, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc(SORT_BY)));
+        return voucherRepository.findByFilters(tourType, transferType, hotelType, userId, minPrice, maxPrice, pageable)
+                .getContent()
+                .stream()
+                .map(voucherMapper::toVoucherDTO).toList();
+    }
+
+    private static void addVoucherToUser(User user, Voucher orderedVoucher) {
+        if (user.getVouchers() == null) {
+            user.setVouchers(new ArrayList<>());
+        }
+        user.getVouchers().add(orderedVoucher);
+    }
+
+    private Voucher addUserToVoucher(Voucher voucher, User user) {
+        voucher.setUser(user);
+        voucher.setStatus(VoucherStatus.PAID);
+        return voucherRepository.save(voucher);
+    }
+
+    private static void setVoucherFields(Voucher voucherForUpdate, Voucher newVoucher) {
         voucherForUpdate.setTitle(newVoucher.getTitle());
         voucherForUpdate.setDescription(newVoucher.getDescription());
         voucherForUpdate.setPrice(newVoucher.getPrice());
@@ -68,49 +114,6 @@ public class VoucherServiceImpl implements VoucherService {
         voucherForUpdate.setStatus(newVoucher.getStatus());
         voucherForUpdate.setArrivalDate(newVoucher.getArrivalDate());
         voucherForUpdate.setEvictionDate(newVoucher.getEvictionDate());
-        voucherForUpdate.setUser(newVoucher.getUser());
         voucherForUpdate.setHot(newVoucher.isHot());
-
-        Voucher updatedVoucher = voucherRepository.save(voucherForUpdate);
-
-        return voucherMapper.toVoucherDTO(updatedVoucher);
-    }
-
-    @Override
-    public void delete(UUID id) {
-        Voucher voucher = voucherRepository.findById(id)
-                .orElseThrow(() -> new VoucherException(id));
-        voucherRepository.delete(voucher);
-    }
-
-    @Override
-    public VoucherDTO changeHotStatus(UUID id, boolean hotStatus) {
-        Voucher voucher = voucherRepository.findById(id)
-                .orElseThrow(() -> new VoucherException(id));
-        voucher.setHot(hotStatus);
-        return voucherMapper.toVoucherDTO(voucherRepository.save(voucher));
-    }
-
-    @Override
-    public VoucherDTO changeTourStatus(UUID id, VoucherStatus status) {
-        Voucher voucher = voucherRepository.findById(id)
-                .orElseThrow(() -> new VoucherException(id));
-
-        voucher.setStatus(status);
-        Voucher updatedVoucher = voucherRepository.save(voucher);
-        return voucherMapper.toVoucherDTO(updatedVoucher);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<VoucherDTO> findAllByFilter(
-            TourType tourType, TransferType transferType, HotelType hotelType, UUID userId,
-            Double minPrice, Double maxPrice, int page, int size) {
-
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("hot")));
-
-        return voucherRepository.findByFilters(
-                tourType, transferType, hotelType, userId, minPrice, maxPrice, pageable
-        ).getContent().stream().map(voucherMapper::toVoucherDTO).toList();
     }
 }

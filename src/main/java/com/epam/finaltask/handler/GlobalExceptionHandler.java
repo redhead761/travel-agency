@@ -45,12 +45,10 @@ public class GlobalExceptionHandler {
         return createResponseEntity(HttpStatus.BAD_REQUEST, message, errorId);
     }
 
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException e) {
         String errorId = UUID.randomUUID().toString();
         logError(errorId, VALIDATION_ERROR, e.getMessage());
-
 
         Map<String, Object> body = new LinkedHashMap<>(Map.of(TIMESTAMP, LocalDateTime.now(), ERROR_ID, errorId));
         body.putAll(e.getFieldErrors().stream()
@@ -64,7 +62,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleGlobalException(Exception e) {
         String errorId = UUID.randomUUID().toString();
         logError(errorId, GLOBAL_EXCEPTION, e.getMessage());
-
         return createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, UNEXPECTED_ERROR_OCCURRED, errorId);
     }
 
@@ -72,8 +69,7 @@ public class GlobalExceptionHandler {
         String paramName = e.getName();
         String paramValue = e.getValue() == null ? "null" : e.getValue().toString();
         String requiredType = e.getRequiredType() != null ? e.getRequiredType().getSimpleName() : "Unknown";
-
-        return String.format("Invalid value '%s' for parameter '%s'. Expected type: %s. !!!!TEST!!!!",
+        return String.format("Invalid value '%s' for parameter '%s'. Expected type: %s.",
                 paramValue, paramName, requiredType);
     }
 
@@ -89,7 +85,6 @@ public class GlobalExceptionHandler {
                 MESSAGE, message,
                 ERROR_ID, errorId
         );
-
         return ResponseEntity.status(status).body(body);
     }
 }

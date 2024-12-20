@@ -15,7 +15,6 @@ public class UniqueUserValidator implements ConstraintValidator<ValidUniqueField
 
     @Override
     public void initialize(ValidUniqueField constraintAnnotation) {
-        log.error("Initialize validator {}", constraintAnnotation.fieldType());
         this.fieldType = constraintAnnotation.fieldType();
     }
 

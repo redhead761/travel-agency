@@ -2,7 +2,6 @@ package com.epam.finaltask.service.impl;
 
 import com.epam.finaltask.dto.TravelAgencyUserDetails;
 import com.epam.finaltask.dto.UserDTO;
-import com.epam.finaltask.exception.UsernameAlreadyExistsException;
 import com.epam.finaltask.exception.UserException;
 import com.epam.finaltask.mapper.UserMapper;
 import com.epam.finaltask.model.Role;
@@ -32,26 +31,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDTO register(UserDTO userDTO) {
-        userDTO.setRole(Role.USER.name());
-        userDTO.setAccountStatus(true);
+        setDefaultFields(userDTO);
         User newUser = userMapper.toUser(userDTO);
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         User savedUser = userRepository.save(newUser);
-
         return userMapper.toUserDTO(savedUser);
     }
 
     @Override
     public UserDTO updateUser(UUID id, UserDTO userDTO) {
         User userToUpdate = userRepository.findById(id).orElseThrow(() -> new UserException(id));
-
-        checkUniqueUsername(userDTO.getUsername());
-
-        userToUpdate.setUsername(userDTO.getUsername());
-        userToUpdate.setPhoneNumber(userDTO.getPhoneNumber());
-        userToUpdate.setBalance(userDTO.getBalance());
+        setUpdateFields(userDTO, userToUpdate);
         User updatedUser = userRepository.save(userToUpdate);
-
         return userMapper.toUserDTO(updatedUser);
     }
 
@@ -66,10 +57,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserDTO changeAccountStatus(UUID id, boolean accountStatus) {
         User user = userRepository.findById(id).orElseThrow(() -> new UserException(id));
-
         user.setAccountStatus(accountStatus);
         User updatedUser = userRepository.save(user);
-
         return userMapper.toUserDTO(updatedUser);
     }
 
@@ -93,16 +82,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
-    private void checkUniqueUsername(String username) {
-        if (userRepository.existsByUsername(username)) {
-            throw new UsernameAlreadyExistsException(username);
-        }
-    }
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return new TravelAgencyUserDetails(userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserException(username)));
+    }
+
+    private void setDefaultFields(UserDTO userDTO) {
+        userDTO.setRole(Role.USER.name());
+        userDTO.setAccountStatus(true);
+        userDTO.setBalance(0.0);
+    }
+
+
+    private static void setUpdateFields(UserDTO userDTO, User userToUpdate) {
+        userToUpdate.setUsername(userDTO.getUsername());
+        userToUpdate.setPhoneNumber(userDTO.getPhoneNumber());
+        userToUpdate.setBalance(userDTO.getBalance());
     }
 }
 

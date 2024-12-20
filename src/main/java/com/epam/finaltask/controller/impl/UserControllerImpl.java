@@ -32,7 +32,6 @@ public class UserControllerImpl implements UserController {
     @PostMapping("/register")
     public ResponseEntity<RemoteResponse> registerUser(@Validated(OnCreate.class) @RequestBody UserDTO userDto) {
         UserDTO createdUserDto = userService.register(userDto);
-
         return ResponseEntity.status(CREATED)
                 .body(RemoteResponse.builder()
                         .succeeded(true)
@@ -47,7 +46,6 @@ public class UserControllerImpl implements UserController {
     public ResponseEntity<RemoteResponse> updateUser(@PathVariable UUID id,
                                                      @Validated @RequestBody UserDTO userDto) {
         UserDTO updatedUserDto = userService.updateUser(id, userDto);
-
         return ResponseEntity.ok()
                 .body(RemoteResponse.builder()
                         .succeeded(true)
@@ -77,7 +75,6 @@ public class UserControllerImpl implements UserController {
     public ResponseEntity<RemoteResponse> changeUserAccountStatus(@PathVariable UUID id,
                                                                   @RequestParam boolean accountStatus) {
         UserDTO updatedUserDto = userService.changeAccountStatus(id, accountStatus);
-
         return ResponseEntity.ok()
                 .body(RemoteResponse.builder()
                         .succeeded(true)
@@ -93,7 +90,6 @@ public class UserControllerImpl implements UserController {
     public ResponseEntity<RemoteResponse> changeRole(@PathVariable UUID id,
                                                      @RequestParam Role role) {
         UserDTO updatedUserDto = userService.changeRole(id, role);
-
         return ResponseEntity.ok()
                 .body(RemoteResponse.builder()
                         .succeeded(true)
