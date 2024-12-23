@@ -11,6 +11,8 @@ import com.epam.finaltask.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,7 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -82,6 +86,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                     .build();
             userRepository.save(admin);
         }
+    }
+
+    @Override
+    public List<UserDTO> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return userRepository.findAll(pageable).stream().map(userMapper::toUserDTO).toList();
     }
 
     @Override

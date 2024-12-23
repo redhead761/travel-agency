@@ -27,6 +27,22 @@ public class UserControllerImpl implements UserController {
     private static final String USER_REGISTERED = "User is successfully registered";
     private static final String USER_UPDATED = "User is successfully updated";
     private static final String USER_OBTAINED = "User was obtained successfully";
+    private static final String USERS_OBTAINED = "Users were obtained successfully";
+
+    @Override
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    @GetMapping
+    public ResponseEntity<RemoteResponse> findAll(@RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "10") int size) {
+        List<UserDTO> users = userService.findAll(page, size);
+        return ResponseEntity.ok()
+                .body(RemoteResponse.builder()
+                        .succeeded(true)
+                        .statusCode(OK.name())
+                        .statusMessage(USERS_OBTAINED)
+                        .results(users)
+                        .build());
+    }
 
     @Override
     @PostMapping("/register")
