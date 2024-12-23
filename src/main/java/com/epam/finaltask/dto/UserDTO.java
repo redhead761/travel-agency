@@ -23,10 +23,9 @@ public class UserDTO {
 
     private String id;
 
-    @NotNull(groups = {OnCreate.class}, message = "Password can't be null")
+    @NotNull(groups = {OnCreate.class}, message = "password.not.null")
     @Pattern(groups = {OnCreate.class}, regexp = "[a-zA-Z0-9]{8,16}",
-            message = "Your password must contain upper and lower case letters and numbers, " +
-                    "at least 7 and maximum 30 characters.Password cannot contains spaces")
+            message = "password.pattern")
     private String password;
 
     @NotNull(message = "Username can't be null")

@@ -10,6 +10,7 @@ import com.epam.finaltask.repository.UserRepository;
 import com.epam.finaltask.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,6 +29,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final MessageSource messageSource;
 
     @Override
     public UserDTO register(UserDTO userDTO) {
@@ -40,7 +42,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDTO updateUser(UUID id, UserDTO userDTO) {
-        User userToUpdate = userRepository.findById(id).orElseThrow(() -> new UserException(id));
+        User userToUpdate = userRepository.findById(id).orElseThrow(() -> new UserException(id, messageSource));
         setUpdateFields(userDTO, userToUpdate);
         User updatedUser = userRepository.save(userToUpdate);
         return userMapper.toUserDTO(updatedUser);
@@ -48,7 +50,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDTO changeRole(UUID id, Role role) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserException(id));
+        User user = userRepository.findById(id).orElseThrow(() -> new UserException(id, messageSource));
         user.setRole(role);
         User updatedUser = userRepository.save(user);
         return userMapper.toUserDTO(updatedUser);
@@ -56,7 +58,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDTO changeAccountStatus(UUID id, boolean accountStatus) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserException(id));
+        User user = userRepository.findById(id).orElseThrow(() -> new UserException(id, messageSource));
         user.setAccountStatus(accountStatus);
         User updatedUser = userRepository.save(user);
         return userMapper.toUserDTO(updatedUser);
@@ -65,7 +67,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional(readOnly = true)
     @Override
     public UserDTO getUserById(UUID id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserException(id));
+        User user = userRepository.findById(id).orElseThrow(() -> new UserException(id, messageSource));
         return userMapper.toUserDTO(user);
     }
 
@@ -85,7 +87,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return new TravelAgencyUserDetails(userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserException(username)));
+                .orElseThrow(() -> new UserException(username, messageSource)));
     }
 
     private void setDefaultFields(UserDTO userDTO) {

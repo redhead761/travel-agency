@@ -10,6 +10,7 @@ import com.epam.finaltask.repository.VoucherRepository;
 import com.epam.finaltask.service.VoucherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -29,6 +30,7 @@ public class VoucherServiceImpl implements VoucherService {
     private final VoucherRepository voucherRepository;
     private final UserRepository userRepository;
     private final VoucherMapper voucherMapper;
+    private final MessageSource messageSource;
     private static final String SORT_BY = "hot";
 
     @Override
@@ -41,8 +43,8 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public VoucherDTO order(UUID voucherId, UUID userId) {
-        Voucher voucher = voucherRepository.findById(voucherId).orElseThrow(() -> new VoucherException(voucherId));
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserException(userId));
+        Voucher voucher = voucherRepository.findById(voucherId).orElseThrow(() -> new VoucherException(voucherId, messageSource));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserException(userId, messageSource));
         Voucher orderedVoucher = addUserToVoucher(voucher, user);
         addVoucherToUser(user, orderedVoucher);
         return voucherMapper.toVoucherDTO(orderedVoucher);
@@ -51,7 +53,7 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public VoucherDTO update(UUID id, VoucherDTO voucherDTO) {
-        Voucher voucherForUpdate = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id));
+        Voucher voucherForUpdate = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id, messageSource));
         Voucher newVoucher = voucherMapper.toVoucher(voucherDTO);
         setVoucherFields(voucherForUpdate, newVoucher);
         Voucher updatedVoucher = voucherRepository.save(voucherForUpdate);
@@ -61,20 +63,20 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public void delete(UUID id) {
-        Voucher voucher = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id));
+        Voucher voucher = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id, messageSource));
         voucherRepository.delete(voucher);
     }
 
     @Override
     public VoucherDTO changeHotStatus(UUID id, boolean hotStatus) {
-        Voucher voucher = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id));
+        Voucher voucher = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id, messageSource));
         voucher.setHot(hotStatus);
         return voucherMapper.toVoucherDTO(voucherRepository.save(voucher));
     }
 
     @Override
     public VoucherDTO changeTourStatus(UUID id, VoucherStatus status) {
-        Voucher voucher = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id));
+        Voucher voucher = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id, messageSource));
         voucher.setStatus(status);
         Voucher updatedVoucher = voucherRepository.save(voucher);
         return voucherMapper.toVoucherDTO(updatedVoucher);

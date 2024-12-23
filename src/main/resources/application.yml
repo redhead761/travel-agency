@@ -13,11 +13,17 @@ spring:
   liquibase:
     enabled: true
     change-log: ${CHANGE_LOG}
+  messages:
+    encoding: UTF-8
 
 server:
   port: ${SERVER_PORT}
   servlet:
     context-path: ${SERVER_CONTEXT_PATH}
+    encoding:
+      enabled: true
+      charset: UTF-8
+      force: true
 
 logging:
   pattern:

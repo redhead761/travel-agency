@@ -1,7 +1,11 @@
 package com.epam.finaltask.handler;
 
 import com.epam.finaltask.exception.TravelAgencyException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
     private static final String TIMESTAMP = "timestamp";
     private static final String MESSAGE = "message";
@@ -29,11 +34,13 @@ public class GlobalExceptionHandler {
     private static final String LOG_MESSAGE = "ErrorId: {}, {}: {}";
     private static final String VALIDATION_ERROR = "Validation error";
 
+    @Autowired
+    private MessageSource messageSource;
+
     @ExceptionHandler(TravelAgencyException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ResponseEntity<Map<String, Object>> notFoundException(TravelAgencyException e) {
         logError(e.getErrorId(), RESPONSE_STATUS_EXCEPTION, e.getReason());
-
         return createResponseEntity(e.getStatusCode(), e.getReason(), e.getErrorId());
     }
 
@@ -53,9 +60,9 @@ public class GlobalExceptionHandler {
         Map<String, Object> body = new LinkedHashMap<>(Map.of(TIMESTAMP, LocalDateTime.now(), ERROR_ID, errorId));
         body.putAll(e.getFieldErrors().stream()
                 .collect(Collectors.groupingBy(FieldError::getField,
-                        Collectors.mapping(FieldError::getDefaultMessage, Collectors.toList()))));
+                        Collectors.mapping(fieldError -> getLocalizedMessage(fieldError.getDefaultMessage()), Collectors.toList()))));
         List<String> globalErrors = e.getGlobalErrors().stream()
-                .map(ObjectError::getDefaultMessage)
+                .map(objectError -> messageSource.getMessage(objectError, LocaleContextHolder.getLocale()))
                 .toList();
         if (!globalErrors.isEmpty()) body.put("validate class errors", globalErrors);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
@@ -72,7 +79,9 @@ public class GlobalExceptionHandler {
         String paramName = e.getName();
         String paramValue = (e.getValue() != null) ? e.getValue().toString() : "null";
         String requiredType = (e.getRequiredType() != null) ? e.getRequiredType().getSimpleName() : "Unknown";
-        return String.format("Invalid value '%s' for parameter '%s'. Expected type: %s.", paramValue, paramName, requiredType);
+        return messageSource.getMessage("enum.not.found.exception",
+                new Object[]{paramValue, paramName, requiredType},
+                LocaleContextHolder.getLocale());
     }
 
     private void logError(String errorId, String exceptionType, String errorMessage) {
@@ -82,6 +91,10 @@ public class GlobalExceptionHandler {
     private ResponseEntity<Map<String, Object>> createResponseEntity(HttpStatusCode status, String message, String errorId) {
         Map<String, Object> body = Map.of(TIMESTAMP, LocalDateTime.now(), MESSAGE, message, ERROR_ID, errorId);
         return ResponseEntity.status(status).body(body);
+    }
+
+    private String getLocalizedMessage(String message) {
+        return messageSource.getMessage(message, null, LocaleContextHolder.getLocale());
     }
 }
 
