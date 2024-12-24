@@ -5,6 +5,7 @@ import com.epam.finaltask.model.HotelType;
 import com.epam.finaltask.model.TourType;
 import com.epam.finaltask.model.TransferType;
 import com.epam.finaltask.model.VoucherStatus;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +23,7 @@ public interface VoucherService {
 
     VoucherDTO changeTourStatus(UUID id, VoucherStatus status);
 
-    List<VoucherDTO> findAllByFilter(
+    Page<VoucherDTO> findAllByFilter(
             TourType tourType, TransferType transferType, HotelType hotelType, UUID userId,
             Double minPrice, Double maxPrice, int page, int size);
 }

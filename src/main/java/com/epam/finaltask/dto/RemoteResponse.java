@@ -16,5 +16,6 @@ public class RemoteResponse {
     private String statusCode;
     private String statusMessage;
     private List<?> results;
+    private Integer totalPages;
 }
 

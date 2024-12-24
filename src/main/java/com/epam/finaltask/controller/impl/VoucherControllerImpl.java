@@ -11,6 +11,7 @@ import com.epam.finaltask.model.TransferType;
 import com.epam.finaltask.model.VoucherStatus;
 import com.epam.finaltask.service.VoucherService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -43,16 +44,17 @@ public class VoucherControllerImpl implements VoucherController {
                                                   @RequestParam(required = false) UUID userId,
                                                   @RequestParam(required = false) Double minPrice,
                                                   @RequestParam(required = false) Double maxPrice,
-                                                  @RequestParam(defaultValue = "0") int page,
-                                                  @RequestParam(defaultValue = "10") int size) {
-        List<VoucherDTO> result = voucherService.findAllByFilter(tourType, transferType, hotelType,
+                                                  @RequestParam(defaultValue = "1") int page,
+                                                  @RequestParam(defaultValue = "8") int size) {
+        Page<VoucherDTO> result = voucherService.findAllByFilter(tourType, transferType, hotelType,
                 userId, minPrice, maxPrice, page, size);
         return ResponseEntity.ok()
                 .body(RemoteResponse.builder()
                         .succeeded(true)
                         .statusCode(OK.name())
                         .statusMessage(GETTING_ALL_VOUCHERS)
-                        .results(result)
+                        .results(result.getContent())
+                        .totalPages(result.getTotalPages())
                         .build());
     }
 

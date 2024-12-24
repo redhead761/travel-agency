@@ -11,6 +11,7 @@ import com.epam.finaltask.service.VoucherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -84,13 +85,11 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<VoucherDTO> findAllByFilter(TourType tourType, TransferType transferType, HotelType hotelType, UUID userId,
+    public Page<VoucherDTO> findAllByFilter(TourType tourType, TransferType transferType, HotelType hotelType, UUID userId,
                                             Double minPrice, Double maxPrice, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc(SORT_BY)));
-        return voucherRepository.findByFilters(tourType, transferType, hotelType, userId, minPrice, maxPrice, pageable)
-                .getContent()
-                .stream()
-                .map(voucherMapper::toVoucherDTO).toList();
+        Pageable pageable = PageRequest.of(page-1, size, Sort.by(Sort.Order.desc(SORT_BY)));
+        Page<Voucher> vouchers = voucherRepository.findByFilters(tourType, transferType, hotelType, userId, minPrice, maxPrice, pageable);
+        return vouchers.map(voucherMapper::toVoucherDTO);
     }
 
     private static void addVoucherToUser(User user, Voucher orderedVoucher) {

@@ -34,4 +34,10 @@ public class EnumControllerImpl implements EnumController {
     public List<TransferType> getTransferType() {
         return Arrays.stream(TransferType.values()).collect(Collectors.toList());
     }
+
+    @Override
+    @GetMapping("/status")
+    public List<VoucherStatus> getVoucherStatus() {
+        return Arrays.stream(VoucherStatus.values()).collect(Collectors.toList());
+    }
 }
