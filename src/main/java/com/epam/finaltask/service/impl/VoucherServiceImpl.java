@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -32,7 +31,8 @@ public class VoucherServiceImpl implements VoucherService {
     private final UserRepository userRepository;
     private final VoucherMapper voucherMapper;
     private final MessageSource messageSource;
-    private static final String SORT_BY = "hot";
+    private static final String BY_HOT = "hot";
+    private static final String BY_ID = "id";
 
     @Override
     public VoucherDTO create(VoucherDTO voucherDTO) {
@@ -87,9 +87,14 @@ public class VoucherServiceImpl implements VoucherService {
     @Override
     public Page<VoucherDTO> findAllByFilter(TourType tourType, TransferType transferType, HotelType hotelType, UUID userId,
                                             Double minPrice, Double maxPrice, int page, int size) {
-        Pageable pageable = PageRequest.of(page-1, size, Sort.by(Sort.Order.desc(SORT_BY)));
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Order.desc(BY_HOT), Sort.Order.asc(BY_ID)));
         Page<Voucher> vouchers = voucherRepository.findByFilters(tourType, transferType, hotelType, userId, minPrice, maxPrice, pageable);
         return vouchers.map(voucherMapper::toVoucherDTO);
+    }
+
+    @Override
+    public VoucherDTO getById(UUID id) {
+        return voucherMapper.toVoucherDTO(voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id, messageSource)));
     }
 
     private static void addVoucherToUser(User user, Voucher orderedVoucher) {

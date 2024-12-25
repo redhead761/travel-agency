@@ -28,7 +28,9 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RequiredArgsConstructor
 public class VoucherControllerImpl implements VoucherController {
 
+
     private final VoucherService voucherService;
+    private static final String GET_VOUCHER = "Voucher is successful existed";
     private static final String GETTING_ALL_VOUCHERS = "The request for getting all existed vouchers is successful";
     private static final String SUCCESSFULLY_CREATED = "Voucher is successfully created";
     private static final String SUCCESSFULLY_ORDERED = "Voucher is  successfully ordered";
@@ -55,6 +57,19 @@ public class VoucherControllerImpl implements VoucherController {
                         .statusMessage(GETTING_ALL_VOUCHERS)
                         .results(result.getContent())
                         .totalPages(result.getTotalPages())
+                        .build());
+    }
+
+    @Override
+    @GetMapping({"/{id}"})
+    public ResponseEntity<RemoteResponse> getVoucher(@PathVariable UUID id) {
+        VoucherDTO result = voucherService.getById(id);
+        return ResponseEntity.ok()
+                .body(RemoteResponse.builder()
+                        .succeeded(true)
+                        .statusCode(OK.name())
+                        .statusMessage(GET_VOUCHER)
+                        .results(List.of(result))
                         .build());
     }
 

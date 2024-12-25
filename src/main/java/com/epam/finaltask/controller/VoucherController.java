@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
 import java.util.UUID;
+
 @Tag(name = "Voucher", description = "Voucher func")
 public interface VoucherController {
     @Operation(
@@ -27,6 +28,16 @@ public interface VoucherController {
             TourType tourType, TransferType transferType, HotelType hotelType,
             UUID userId, Double minPrice, Double maxPrice,
             int page, int size);
+
+    @Operation(
+            summary = "Retrieve voucher by id",
+            description = "Fetches voucher details using the provided id."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Voucher successfully retrieved"),
+            @ApiResponse(responseCode = "404", description = "Voucher not found")
+    })
+    ResponseEntity<RemoteResponse> getVoucher(UUID id);
 
     @Operation(
             summary = "Create a new voucher",
