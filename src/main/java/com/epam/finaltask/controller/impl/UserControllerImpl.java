@@ -7,6 +7,7 @@ import com.epam.finaltask.dto.group.OnCreate;
 import com.epam.finaltask.model.Role;
 import com.epam.finaltask.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -34,13 +35,14 @@ public class UserControllerImpl implements UserController {
     @GetMapping
     public ResponseEntity<RemoteResponse> findAll(@RequestParam(defaultValue = "0") int page,
                                                   @RequestParam(defaultValue = "10") int size) {
-        List<UserDTO> users = userService.findAll(page, size);
+        Page<UserDTO> result = userService.findAll(page, size);
         return ResponseEntity.ok()
                 .body(RemoteResponse.builder()
                         .succeeded(true)
                         .statusCode(OK.name())
                         .statusMessage(USERS_OBTAINED)
-                        .results(users)
+                        .results(result.getContent())
+                        .totalPages(result.getTotalPages())
                         .build());
     }
 

@@ -11,6 +11,7 @@ import com.epam.finaltask.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -89,9 +90,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public List<UserDTO> findAll(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return userRepository.findAll(pageable).stream().map(userMapper::toUserDTO).toList();
+    public Page<UserDTO> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page-1, size);
+        Page<User> users = userRepository.findAll(pageable);
+        return users.map(userMapper::toUserDTO);
     }
 
     @Override

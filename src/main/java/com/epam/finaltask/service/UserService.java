@@ -2,11 +2,12 @@ package com.epam.finaltask.service;
 
 import com.epam.finaltask.dto.UserDTO;
 import com.epam.finaltask.model.Role;
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 import java.util.UUID;
 
 public interface UserService {
+
     UserDTO register(UserDTO userDTO);
 
     UserDTO updateUser(UUID id, UserDTO userDTO);
@@ -19,5 +20,5 @@ public interface UserService {
 
     void createAdmin(String adminName, String adminPassword);
 
-    List<UserDTO> findAll(int page, int size);
+    Page<UserDTO> findAll(int page, int size);
 }
