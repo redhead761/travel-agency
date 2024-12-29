@@ -11,6 +11,8 @@ import com.epam.finaltask.model.TransferType;
 import com.epam.finaltask.model.VoucherStatus;
 import com.epam.finaltask.service.VoucherService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,15 +30,8 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RequiredArgsConstructor
 public class VoucherControllerImpl implements VoucherController {
 
-
     private final VoucherService voucherService;
-    private static final String GET_VOUCHER = "Voucher is successful existed";
-    private static final String GETTING_ALL_VOUCHERS = "The request for getting all existed vouchers is successful";
-    private static final String SUCCESSFULLY_CREATED = "Voucher is successfully created";
-    private static final String SUCCESSFULLY_ORDERED = "Voucher is  successfully ordered";
-    private static final String SUCCESSFULLY_UPDATED = "Voucher is successfully updated";
-    private static final String SUCCESSFULLY_DELETED = "Voucher with Id %s has been deleted";
-    private static final String STATUS_CHANGED = "Voucher status is successfully changed";
+    private final MessageSource messageSource;
 
     @Override
     @GetMapping
@@ -54,7 +49,7 @@ public class VoucherControllerImpl implements VoucherController {
                 .body(RemoteResponse.builder()
                         .succeeded(true)
                         .statusCode(OK.name())
-                        .statusMessage(GETTING_ALL_VOUCHERS)
+                        .statusMessage(getLocalizedMessage("voucher.get.all"))
                         .results(result.getContent())
                         .totalPages(result.getTotalPages())
                         .build());
@@ -68,7 +63,7 @@ public class VoucherControllerImpl implements VoucherController {
                 .body(RemoteResponse.builder()
                         .succeeded(true)
                         .statusCode(OK.name())
-                        .statusMessage(GET_VOUCHER)
+                        .statusMessage(getLocalizedMessage("voucher.get"))
                         .results(List.of(result))
                         .build());
     }
@@ -82,7 +77,7 @@ public class VoucherControllerImpl implements VoucherController {
                 body(RemoteResponse.builder()
                         .succeeded(true)
                         .statusCode(OK.name())
-                        .statusMessage(SUCCESSFULLY_CREATED)
+                        .statusMessage(getLocalizedMessage("voucher.created"))
                         .results(List.of(createdVoucherDto))
                         .build());
     }
@@ -95,7 +90,7 @@ public class VoucherControllerImpl implements VoucherController {
                 .body(RemoteResponse.builder()
                         .succeeded(true)
                         .statusCode(OK.name())
-                        .statusMessage(SUCCESSFULLY_ORDERED)
+                        .statusMessage(getLocalizedMessage("voucher.ordered"))
                         .results(List.of(orderedVoucherDto))
                         .build());
     }
@@ -110,7 +105,7 @@ public class VoucherControllerImpl implements VoucherController {
                 .body(RemoteResponse.builder()
                         .succeeded(true)
                         .statusCode(OK.name())
-                        .statusMessage(SUCCESSFULLY_UPDATED)
+                        .statusMessage(getLocalizedMessage("voucher.updated"))
                         .results(List.of(updatedVoucherDto))
                         .build());
     }
@@ -124,7 +119,7 @@ public class VoucherControllerImpl implements VoucherController {
                 .body(RemoteResponse.builder()
                         .succeeded(true)
                         .statusCode(OK.name())
-                        .statusMessage(String.format(SUCCESSFULLY_DELETED, id))
+                        .statusMessage(getLocalizedMessage("voucher.deleted"))
                         .results(null)
                         .build());
     }
@@ -138,7 +133,7 @@ public class VoucherControllerImpl implements VoucherController {
                 .body(RemoteResponse.builder()
                         .succeeded(true)
                         .statusCode(OK.name())
-                        .statusMessage(STATUS_CHANGED)
+                        .statusMessage(getLocalizedMessage("hot.status.changed"))
                         .results(List.of(updatedVoucherDto))
                         .build());
     }
@@ -152,9 +147,13 @@ public class VoucherControllerImpl implements VoucherController {
                 .body(RemoteResponse.builder()
                         .succeeded(true)
                         .statusCode(OK.name())
-                        .statusMessage(STATUS_CHANGED)
+                        .statusMessage(getLocalizedMessage("voucher.status.changed"))
                         .results(List.of(updatedVoucherDto))
                         .build());
+    }
+
+    private String getLocalizedMessage(String message) {
+        return messageSource.getMessage(message, null, LocaleContextHolder.getLocale());
     }
 }
 

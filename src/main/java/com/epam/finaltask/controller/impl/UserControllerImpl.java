@@ -7,6 +7,8 @@ import com.epam.finaltask.dto.group.OnCreate;
 import com.epam.finaltask.model.Role;
 import com.epam.finaltask.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,10 +27,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class UserControllerImpl implements UserController {
 
     private final UserService userService;
-    private static final String USER_REGISTERED = "User is successfully registered";
-    private static final String USER_UPDATED = "User is successfully updated";
-    private static final String USER_OBTAINED = "User was obtained successfully";
-    private static final String USERS_OBTAINED = "Users were obtained successfully";
+    private final MessageSource messageSource;
 
     @Override
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
@@ -40,7 +39,7 @@ public class UserControllerImpl implements UserController {
                 .body(RemoteResponse.builder()
                         .succeeded(true)
                         .statusCode(OK.name())
-                        .statusMessage(USERS_OBTAINED)
+                        .statusMessage(getLocalizedMessage("users.obtained"))
                         .results(result.getContent())
                         .totalPages(result.getTotalPages())
                         .build());
@@ -54,7 +53,7 @@ public class UserControllerImpl implements UserController {
                 .body(RemoteResponse.builder()
                         .succeeded(true)
                         .statusCode(OK.name())
-                        .statusMessage(USER_REGISTERED)
+                        .statusMessage(getLocalizedMessage("users.registered"))
                         .results(List.of(createdUserDto))
                         .build());
     }
@@ -68,7 +67,7 @@ public class UserControllerImpl implements UserController {
                 .body(RemoteResponse.builder()
                         .succeeded(true)
                         .statusCode(OK.name())
-                        .statusMessage(USER_UPDATED)
+                        .statusMessage(getLocalizedMessage("users.updated"))
                         .results(List.of(updatedUserDto))
                         .build());
     }
@@ -82,7 +81,7 @@ public class UserControllerImpl implements UserController {
                 .body(RemoteResponse.builder()
                         .succeeded(true)
                         .statusCode(OK.name())
-                        .statusMessage(USER_OBTAINED)
+                        .statusMessage(getLocalizedMessage("user.obtained"))
                         .results(List.of(userDTO))
                         .build());
     }
@@ -97,7 +96,7 @@ public class UserControllerImpl implements UserController {
                 .body(RemoteResponse.builder()
                         .succeeded(true)
                         .statusCode(OK.name())
-                        .statusMessage(USER_UPDATED)
+                        .statusMessage(getLocalizedMessage("user.status.changed"))
                         .results(List.of(updatedUserDto))
                         .build());
     }
@@ -112,9 +111,13 @@ public class UserControllerImpl implements UserController {
                 .body(RemoteResponse.builder()
                         .succeeded(true)
                         .statusCode(OK.name())
-                        .statusMessage(USER_UPDATED)
+                        .statusMessage(getLocalizedMessage("user.role.changed"))
                         .results(List.of(updatedUserDto))
                         .build());
+    }
+
+    private String getLocalizedMessage(String message) {
+        return messageSource.getMessage(message, null, LocaleContextHolder.getLocale());
     }
 }
 

@@ -30,44 +30,43 @@ import java.util.UUID;
 public class VoucherDTO {
     private String id;
 
-    @NotBlank(groups = {OnCreate.class, OnUpdate.class}, message = "Title is required field")
-    @Length(max = 255, message = "Title must be between 3 and 45 characters")
+    @NotBlank(groups = {OnCreate.class, OnUpdate.class}, message = "title.not.blank")
+    @Length(max = 255, message = "title.length")
     private String title;
 
-    @NotBlank(groups = {OnCreate.class, OnUpdate.class}, message = "Description is required field")
+    @NotBlank(groups = {OnCreate.class, OnUpdate.class}, message = "description.not.blank")
     private String description;
 
-    @NotNull(groups = {OnCreate.class, OnUpdate.class}, message = "Price is required field")
-    @Positive
+    @NotNull(groups = {OnCreate.class, OnUpdate.class}, message = "price.not.blank")
+    @Positive(message = "price.positive")
     private Double price;
 
-    @NotBlank(groups = {OnCreate.class, OnUpdate.class}, message = "Tour type is required field")
-    @ValidEnum(value = TourType.class, message = "Invalid value ${validatedValue} for parameter tourType. Expected type: TourType.")
+    @NotBlank(groups = {OnCreate.class, OnUpdate.class}, message = "tour.type.not.blank")
+    @ValidEnum(value = TourType.class, message = "tour.type.valid")
     private String tourType;
 
-    @NotBlank(groups = {OnCreate.class, OnUpdate.class}, message = "Transfer type is required field")
-    @ValidEnum(value = TransferType.class, message = "Invalid value ${validatedValue} for parameter transferType. Expected type: TransferType.")
+    @NotBlank(groups = {OnCreate.class, OnUpdate.class}, message = "transfer.type.not.blank")
+    @ValidEnum(value = TransferType.class, message = "transfer.type.valid")
     private String transferType;
 
-    @NotBlank(groups = {OnCreate.class, OnUpdate.class}, message = "Hotel type is required field")
-    @ValidEnum(value = HotelType.class, message = "Invalid value ${validatedValue} for parameter hotelType. Expected type: HotelType.")
+    @NotBlank(groups = {OnCreate.class, OnUpdate.class}, message = "hotel.type.not.blank")
+    @ValidEnum(value = HotelType.class, message = "hotel.type.valid")
     private String hotelType;
 
-    @NotBlank(groups = {OnChange.class, OnUpdate.class}, message = "Status is required field")
-    @ValidEnum(groups = {OnChange.class, OnUpdate.class}, value = VoucherStatus.class,
-            message = "Invalid value ${validatedValue} for parameter status. Expected type: VoucherStatus.")
+    @NotBlank(groups = {OnChange.class, OnUpdate.class}, message = "status.not.blank")
+    @ValidEnum(groups = {OnChange.class, OnUpdate.class}, value = VoucherStatus.class, message = "status.valid")
     private String status;
 
-    @NotNull(groups = {OnCreate.class, OnUpdate.class}, message = "Arrival date is required field")
+    @NotNull(groups = {OnCreate.class, OnUpdate.class}, message = "arrival.not.blank")
     @FutureOrPresent
     private LocalDate arrivalDate;
 
-    @NotNull(groups = {OnCreate.class, OnUpdate.class}, message = "Eviction date is required field")
+    @NotNull(groups = {OnCreate.class, OnUpdate.class}, message = "eviction.not.blank")
     @FutureOrPresent
     private LocalDate evictionDate;
 
     private UUID userId;
 
-    @NotNull(groups = {OnCreate.class, OnUpdate.class}, message = "Hot is required field")
+    @NotNull(groups = {OnCreate.class, OnUpdate.class}, message = "hot.not.blank")
     private String hot;
 }
