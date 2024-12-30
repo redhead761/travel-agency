@@ -14,6 +14,7 @@ import java.util.UUID;
 @Tag(name = "User", description = "Users func")
 public interface UserController {
     ResponseEntity<RemoteResponse> findAll(int page, int size);
+
     @Operation(
             summary = "Register a new user",
             description = "Registers a new user in the system with the provided details."
@@ -56,13 +57,23 @@ public interface UserController {
 
     @Operation(
             summary = "Change user role",
-            description = "Modifies the role of a user identified by od."
+            description = "Modifies the role of a user identified by id."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User role successfully updated"),
             @ApiResponse(responseCode = "400", description = "Validation error, e.g., invalid input or role")
     })
     ResponseEntity<RemoteResponse> changeRole(UUID id, Role role);
+
+    @Operation(
+            summary = "Change user balance",
+            description = "Tops up the user's balance"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User balance successfully updated"),
+            @ApiResponse(responseCode = "400", description = "Validation error, e.g., invalid input or amount")
+    })
+    ResponseEntity<RemoteResponse> balanceTopUp(UUID id, Double amount);
 
 
 }

@@ -91,9 +91,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public Page<UserDTO> findAll(int page, int size) {
-        Pageable pageable = PageRequest.of(page-1, size);
+        Pageable pageable = PageRequest.of(page - 1, size);
         Page<User> users = userRepository.findAll(pageable);
         return users.map(userMapper::toUserDTO);
+    }
+
+    @Override
+    public void balanceTopUp(UUID id, Double amount) {
+        User user = userRepository.findById(id).orElseThrow(() -> new UserException(id, messageSource));
+        user.setBalance(user.getBalance() + amount);
     }
 
     @Override

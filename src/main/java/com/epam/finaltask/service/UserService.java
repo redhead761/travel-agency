@@ -21,4 +21,6 @@ public interface UserService {
     void createAdmin(String adminName, String adminPassword);
 
     Page<UserDTO> findAll(int page, int size);
+
+    void balanceTopUp(UUID id, Double amount);
 }

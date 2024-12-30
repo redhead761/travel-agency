@@ -4,8 +4,10 @@ import com.epam.finaltask.controller.UserController;
 import com.epam.finaltask.dto.RemoteResponse;
 import com.epam.finaltask.dto.UserDTO;
 import com.epam.finaltask.dto.group.OnCreate;
+import com.epam.finaltask.dto.group.OnUpdate;
 import com.epam.finaltask.model.Role;
 import com.epam.finaltask.service.UserService;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -60,8 +62,7 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @PutMapping("/{id}")
-    public ResponseEntity<RemoteResponse> updateUser(@PathVariable UUID id,
-                                                     @Validated @RequestBody UserDTO userDto) {
+    public ResponseEntity<RemoteResponse> updateUser(@PathVariable UUID id, @Validated @RequestBody UserDTO userDto) {
         UserDTO updatedUserDto = userService.updateUser(id, userDto);
         return ResponseEntity.ok()
                 .body(RemoteResponse.builder()
@@ -104,8 +105,7 @@ public class UserControllerImpl implements UserController {
     @Override
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @PatchMapping("/{id}/role")
-    public ResponseEntity<RemoteResponse> changeRole(@PathVariable UUID id,
-                                                     @RequestParam Role role) {
+    public ResponseEntity<RemoteResponse> changeRole(@PathVariable UUID id, @RequestParam Role role) {
         UserDTO updatedUserDto = userService.changeRole(id, role);
         return ResponseEntity.ok()
                 .body(RemoteResponse.builder()
@@ -113,6 +113,19 @@ public class UserControllerImpl implements UserController {
                         .statusCode(OK.name())
                         .statusMessage(getLocalizedMessage("user.role.changed"))
                         .results(List.of(updatedUserDto))
+                        .build());
+    }
+
+    @Override
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    @PatchMapping("/{id}/top_up")
+    public ResponseEntity<RemoteResponse> balanceTopUp(@PathVariable UUID id, @RequestParam Double amount) {
+        userService.balanceTopUp(id, amount);
+        return ResponseEntity.ok()
+                .body(RemoteResponse.builder()
+                        .succeeded(true)
+                        .statusMessage(OK.name())
+                        .statusMessage(getLocalizedMessage("user.balance.changed"))
                         .build());
     }
 
