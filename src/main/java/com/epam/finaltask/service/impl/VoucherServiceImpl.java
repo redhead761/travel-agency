@@ -66,6 +66,7 @@ public class VoucherServiceImpl implements VoucherService {
     @Override
     public void delete(UUID id) {
         Voucher voucher = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id, messageSource));
+        refund(voucher);
         voucherRepository.delete(voucher);
     }
 
@@ -79,6 +80,7 @@ public class VoucherServiceImpl implements VoucherService {
     @Override
     public VoucherDTO changeTourStatus(UUID id, VoucherStatus status) {
         Voucher voucher = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id, messageSource));
+        refund(voucher);
         voucher.setStatus(status);
         Voucher updatedVoucher = voucherRepository.save(voucher);
         return voucherMapper.toVoucherDTO(updatedVoucher);
@@ -107,6 +109,7 @@ public class VoucherServiceImpl implements VoucherService {
 
     private Voucher addUserToVoucher(Voucher voucher, User user) {
         voucher.setUser(user);
+        user.setBalance(user.getBalance()-voucher.getPrice());
         voucher.setStatus(VoucherStatus.PAID);
         return voucherRepository.save(voucher);
     }
@@ -124,13 +127,23 @@ public class VoucherServiceImpl implements VoucherService {
         voucherForUpdate.setHot(newVoucher.isHot());
     }
 
-
     private void checkOrderValid(Voucher voucher, User user) {
         if (voucher.getStatus() != VoucherStatus.REGISTERED) {
             throw new OrderException(voucher.getStatus().name(), messageSource);
         }
         if (voucher.getPrice() > user.getBalance()) {
             throw new OrderException(user.getBalance(), messageSource);
+        }
+    }
+
+    private void refund(Voucher voucher) {
+        if (voucher.getStatus() == VoucherStatus.PAID && voucher.getUser() != null) {
+            Double price = voucher.getPrice();
+            User user = userRepository.findById(voucher.getUser().getId())
+                    .orElseThrow(() -> new UserException(voucher.getUser().getId(), messageSource));
+            user.setBalance(user.getBalance() + price);
+            user.getVouchers().remove(voucher);
+            voucher.setUser(null);
         }
     }
 }
