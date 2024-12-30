@@ -10,7 +10,7 @@ public class DatesValidator implements ConstraintValidator<ValidDates, VoucherDT
         if (voucherDTO.getArrivalDate() == null || voucherDTO.getEvictionDate() == null) {
             return true;
         }
-        return voucherDTO.getArrivalDate().isAfter(voucherDTO.getEvictionDate()) ||
-                voucherDTO.getEvictionDate().isBefore(voucherDTO.getArrivalDate());
+        return voucherDTO.getArrivalDate().isBefore(voucherDTO.getEvictionDate()) ||
+                voucherDTO.getEvictionDate().isAfter(voucherDTO.getArrivalDate());
     }
 }

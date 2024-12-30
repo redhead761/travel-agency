@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidDates {
-    String message() default "Arrival date must not be before eviction date";
+    String message() default "date.validation";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
