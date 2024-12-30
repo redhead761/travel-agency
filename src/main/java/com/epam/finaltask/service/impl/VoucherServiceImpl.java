@@ -1,6 +1,7 @@
 package com.epam.finaltask.service.impl;
 
 import com.epam.finaltask.dto.VoucherDTO;
+import com.epam.finaltask.exception.OrderException;
 import com.epam.finaltask.exception.UserException;
 import com.epam.finaltask.exception.VoucherException;
 import com.epam.finaltask.mapper.VoucherMapper;
@@ -46,11 +47,11 @@ public class VoucherServiceImpl implements VoucherService {
     public VoucherDTO order(UUID voucherId, UUID userId) {
         Voucher voucher = voucherRepository.findById(voucherId).orElseThrow(() -> new VoucherException(voucherId, messageSource));
         User user = userRepository.findById(userId).orElseThrow(() -> new UserException(userId, messageSource));
+        checkOrderValid(voucher, user);
         Voucher orderedVoucher = addUserToVoucher(voucher, user);
         addVoucherToUser(user, orderedVoucher);
         return voucherMapper.toVoucherDTO(orderedVoucher);
     }
-
 
     @Override
     public VoucherDTO update(UUID id, VoucherDTO voucherDTO) {
@@ -121,5 +122,15 @@ public class VoucherServiceImpl implements VoucherService {
         voucherForUpdate.setArrivalDate(newVoucher.getArrivalDate());
         voucherForUpdate.setEvictionDate(newVoucher.getEvictionDate());
         voucherForUpdate.setHot(newVoucher.isHot());
+    }
+
+
+    private void checkOrderValid(Voucher voucher, User user) {
+        if (voucher.getStatus() != VoucherStatus.REGISTERED) {
+            throw new OrderException(voucher.getStatus().name(), messageSource);
+        }
+        if (voucher.getPrice() > user.getBalance()) {
+            throw new OrderException(user.getBalance(), messageSource);
+        }
     }
 }
