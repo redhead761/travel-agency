@@ -62,7 +62,6 @@ public class VoucherServiceImpl implements VoucherService {
         return voucherMapper.toVoucherDTO(updatedVoucher);
     }
 
-
     @Override
     public void delete(UUID id) {
         Voucher voucher = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id, messageSource));
@@ -95,6 +94,7 @@ public class VoucherServiceImpl implements VoucherService {
         return vouchers.map(voucherMapper::toVoucherDTO);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public VoucherDTO getById(UUID id) {
         return voucherMapper.toVoucherDTO(voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id, messageSource)));
@@ -109,7 +109,7 @@ public class VoucherServiceImpl implements VoucherService {
 
     private Voucher addUserToVoucher(Voucher voucher, User user) {
         voucher.setUser(user);
-        user.setBalance(user.getBalance()-voucher.getPrice());
+        user.setBalance(user.getBalance() - voucher.getPrice());
         voucher.setStatus(VoucherStatus.PAID);
         return voucherRepository.save(voucher);
     }

@@ -58,11 +58,11 @@ public class VoucherDTO {
     private String status;
 
     @NotNull(groups = {OnCreate.class, OnUpdate.class}, message = "arrival.not.blank")
-    @FutureOrPresent
+    @FutureOrPresent(message = "date.future")
     private LocalDate arrivalDate;
 
     @NotNull(groups = {OnCreate.class, OnUpdate.class}, message = "eviction.not.blank")
-    @FutureOrPresent
+    @FutureOrPresent(message = "date.future")
     private LocalDate evictionDate;
 
     private UUID userId;

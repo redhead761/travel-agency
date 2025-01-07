@@ -3,14 +3,12 @@ package com.epam.finaltask.handler;
 import com.epam.finaltask.exception.TravelAgencyException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -25,6 +23,7 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
+
     private static final String TIMESTAMP = "timestamp";
     private static final String MESSAGE = "message";
     private static final String GLOBAL_EXCEPTION = "Global Exception";
@@ -33,9 +32,7 @@ public class GlobalExceptionHandler {
     private static final String RESPONSE_STATUS_EXCEPTION = "TravelAgency Exception";
     private static final String LOG_MESSAGE = "ErrorId: {}, {}: {}";
     private static final String VALIDATION_ERROR = "Validation error";
-
-    @Autowired
-    private MessageSource messageSource;
+    private final MessageSource messageSource;
 
     @ExceptionHandler(TravelAgencyException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
@@ -58,13 +55,8 @@ public class GlobalExceptionHandler {
         String errorId = UUID.randomUUID().toString();
         logError(errorId, VALIDATION_ERROR, e.getMessage());
         Map<String, Object> body = new LinkedHashMap<>(Map.of(TIMESTAMP, LocalDateTime.now(), ERROR_ID, errorId));
-        body.putAll(e.getFieldErrors().stream()
-                .collect(Collectors.groupingBy(FieldError::getField,
-                        Collectors.mapping(fieldError -> getLocalizedMessage(fieldError.getDefaultMessage()), Collectors.toList()))));
-        List<String> globalErrors = e.getGlobalErrors().stream()
-                .map(objectError -> messageSource.getMessage(objectError, LocaleContextHolder.getLocale()))
-                .toList();
-        if (!globalErrors.isEmpty()) body.put("validate class errors", globalErrors);
+        getFieldsErrors(e, body);
+        getGlobalErrors(e, body);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
@@ -73,6 +65,24 @@ public class GlobalExceptionHandler {
         String errorId = UUID.randomUUID().toString();
         logError(errorId, GLOBAL_EXCEPTION, e.getMessage());
         return createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, UNEXPECTED_ERROR_OCCURRED, errorId);
+    }
+
+    private void getGlobalErrors(MethodArgumentNotValidException e, Map<String, Object> body) {
+        List<String> globalErrors = e.getGlobalErrors().stream()
+                .map(objectError ->
+                        messageSource.getMessage(Objects.requireNonNull(objectError.getDefaultMessage()),
+                                null,
+                                LocaleContextHolder.getLocale()))
+                .toList();
+        if (!globalErrors.isEmpty()) body.put("validate class errors", globalErrors);
+    }
+
+    private void getFieldsErrors(MethodArgumentNotValidException e, Map<String, Object> body) {
+        body.putAll(e.getFieldErrors().stream()
+                .collect(Collectors.groupingBy(FieldError::getField,
+                        Collectors.mapping(
+                                fieldError -> getLocalizedMessage(fieldError.getDefaultMessage(), fieldError.getRejectedValue()),
+                                Collectors.toList()))));
     }
 
     private String getMessage(MethodArgumentTypeMismatchException e) {
@@ -93,8 +103,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(body);
     }
 
-    private String getLocalizedMessage(String message) {
-        return messageSource.getMessage(message, null, LocaleContextHolder.getLocale());
+    private String getLocalizedMessage(String message, Object args) {
+        return messageSource.getMessage(message, new Object[]{args}, LocaleContextHolder.getLocale());
     }
 }
 
