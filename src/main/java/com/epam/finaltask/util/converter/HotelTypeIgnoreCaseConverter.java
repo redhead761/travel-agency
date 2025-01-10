@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class HotelTypeIgnoreCaseConverter implements Converter<String, HotelType> {
-    MessageSource messageSource;
+    private final MessageSource messageSource;
 
     @Override
     public HotelType convert(String source) {

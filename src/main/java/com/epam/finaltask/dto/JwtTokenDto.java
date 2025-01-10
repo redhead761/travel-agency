@@ -14,4 +14,3 @@ public class JwtTokenDto {
     @JsonProperty("token")
     private String accessToken;
 }
-

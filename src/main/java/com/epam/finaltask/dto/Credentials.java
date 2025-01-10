@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Credentials {
-
     @NotNull(message = "Username is required")
     String username;
 

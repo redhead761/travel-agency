@@ -27,7 +27,6 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RequestMapping("/vouchers")
 @RequiredArgsConstructor
 public class VoucherControllerImpl implements VoucherController {
-
     private final VoucherService voucherService;
     private final LocalizationService localizationService;
 
@@ -143,4 +142,3 @@ public class VoucherControllerImpl implements VoucherController {
                 .build();
     }
 }
-

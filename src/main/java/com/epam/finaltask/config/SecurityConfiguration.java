@@ -20,7 +20,6 @@ import org.springframework.web.cors.CorsConfiguration;
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfiguration {
-
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final UnauthorizedAuthenticationEntryPoint entryPoint;
 
@@ -50,4 +49,3 @@ public class SecurityConfiguration {
         return http.build();
     }
 }
-

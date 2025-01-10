@@ -23,7 +23,6 @@ import static org.springframework.http.HttpStatus.OK;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserControllerImpl implements UserController {
-
     private final UserService userService;
     private final LocalizationService localizationService;
 
@@ -118,5 +117,3 @@ public class UserControllerImpl implements UserController {
                 .build();
     }
 }
-
-

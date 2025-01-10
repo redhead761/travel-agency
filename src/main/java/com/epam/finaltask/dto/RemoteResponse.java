@@ -18,4 +18,3 @@ public class RemoteResponse {
     private List<?> results;
     private Integer totalPages;
 }
-

@@ -10,7 +10,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 @Slf4j
 public class RestLoggingInterceptor implements HandlerInterceptor {
-
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request,
                              @NonNull HttpServletResponse response,

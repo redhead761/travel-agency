@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class UniqueUserValidator implements ConstraintValidator<ValidUniqueField, String> {
-
     private final UserRepository userRepository;
     private ValidUniqueField.FieldType fieldType;
 
@@ -25,8 +24,8 @@ public class UniqueUserValidator implements ConstraintValidator<ValidUniqueField
         }
 
         return switch (fieldType) {
-            case USERNAME -> !userRepository.existsByUsername(value);
-            case PHONE -> !userRepository.existsByPhoneNumber(value);
+            case USERNAME -> userRepository.doesNotExistByUsername(value);
+            case PHONE -> userRepository.doesNotExistsByPhoneNumber(value);
         };
     }
 }

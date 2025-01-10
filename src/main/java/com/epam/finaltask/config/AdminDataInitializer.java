@@ -9,12 +9,10 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class AdminDataInitializer implements CommandLineRunner {
-
     @Value("${security.admin.name}")
     private String adminName;
     @Value("${security.admin.password}")
     private String adminPassword;
-
     private final UserService userService;
 
     @Override

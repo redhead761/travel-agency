@@ -10,14 +10,14 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class TourTypeIgnoreCaseConverter implements Converter<String, TourType> {
-    MessageSource messageSource;
+    private final MessageSource messageSource;
 
     @Override
     public TourType convert(String source) {
         try {
             return TourType.valueOf(source.trim().toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new EnumException(source,messageSource);
+            throw new EnumException(source, messageSource);
         }
     }
 }

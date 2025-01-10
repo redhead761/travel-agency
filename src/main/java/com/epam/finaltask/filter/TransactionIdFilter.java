@@ -13,8 +13,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class TransactionIdFilter  implements Filter {
-
+public class TransactionIdFilter implements Filter {
     @Value("${security.admin.name}")
     private String adminName;
 

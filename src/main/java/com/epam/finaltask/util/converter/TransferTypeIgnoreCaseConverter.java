@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class TransferTypeIgnoreCaseConverter implements Converter<String, TransferType> {
-    MessageSource messageSource;
+    private final MessageSource messageSource;
 
     @Override
     public TransferType convert(String source) {

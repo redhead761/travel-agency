@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class VoucherStatusIgnoreCaseConverter implements Converter<String, VoucherStatus> {
-    MessageSource messageSource;
+    private final MessageSource messageSource;
 
     @Override
     public VoucherStatus convert(String source) {

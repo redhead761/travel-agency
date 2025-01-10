@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class ErrorMetricsAspect {
-
     private final MeterRegistry registry;
 
     @Before("execution(public * com.epam.finaltask.handler.GlobalExceptionHandler.*(..))")

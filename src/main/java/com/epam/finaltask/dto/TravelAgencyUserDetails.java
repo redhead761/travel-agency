@@ -10,7 +10,6 @@ import java.util.Set;
 
 @Getter
 public class TravelAgencyUserDetails implements UserDetails {
-
     private final String username;
     private final String password;
     private final boolean isActive;

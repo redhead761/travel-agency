@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/enums")
 public class EnumControllerImpl implements EnumController {
-
     @Override
     @GetMapping("/hotel")
     public List<HotelType> getHotelType() {

@@ -20,7 +20,6 @@ import static org.springframework.http.HttpStatus.OK;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthenticationControllerImpl implements AuthenticationController {
-
     private final AuthenticationService service;
     private final JwtService jwtService;
     private final LocalizationService localizationService;
@@ -33,7 +32,7 @@ public class AuthenticationControllerImpl implements AuthenticationController {
         return RemoteResponse.builder()
                 .succeeded(true)
                 .statusCode(OK.name())
-                .statusMessage(localizationService.getMessage("auth.success"))
+                .statusMessage(localizationService.getMessage("successfully.auth"))
                 .results(List.of(token))
                 .build();
     }
@@ -48,4 +47,3 @@ public class AuthenticationControllerImpl implements AuthenticationController {
         return authorization.substring(7);
     }
 }
-

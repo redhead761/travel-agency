@@ -1,7 +1,6 @@
 package com.epam.finaltask.exception;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -10,7 +9,6 @@ import java.util.UUID;
 
 @Getter
 public class TravelAgencyException extends ResponseStatusException {
-
     private final String transactionId;
     private final String errorId;
 
@@ -22,4 +20,3 @@ public class TravelAgencyException extends ResponseStatusException {
         errorId = UUID.randomUUID().toString();
     }
 }
-

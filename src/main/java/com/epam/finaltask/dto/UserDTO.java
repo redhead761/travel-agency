@@ -3,13 +3,11 @@ package com.epam.finaltask.dto;
 
 import com.epam.finaltask.dto.group.OnChange;
 import com.epam.finaltask.dto.group.OnCreate;
-import com.epam.finaltask.dto.group.OnUpdate;
 import com.epam.finaltask.model.Role;
 import com.epam.finaltask.util.validator.ValidEnum;
 import com.epam.finaltask.util.validator.ValidUniqueField;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +20,6 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class UserDTO {
-
     private String id;
 
     @NotNull(groups = {OnCreate.class}, message = "password.not.null")
@@ -40,7 +37,7 @@ public class UserDTO {
 
     private List<VoucherDTO> vouchers;
 
-    @Pattern(regexp = "^\\+?[1-9][0-9]{7,14}$", message = "phone.patter")
+    @Pattern(regexp = "^\\+?[1-9][0-9]{7,14}$", message = "phone.pattern")
     @ValidUniqueField(fieldType = ValidUniqueField.FieldType.PHONE, message = "phone.unique")
     private String phoneNumber;
 

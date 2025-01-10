@@ -27,11 +27,11 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class VoucherServiceImpl implements VoucherService {
-
     private final VoucherRepository voucherRepository;
     private final UserRepository userRepository;
     private final VoucherMapper voucherMapper;
     private final MessageSource messageSource;
+
     private static final String BY_HOT = "hot";
     private static final String BY_ID = "id";
 

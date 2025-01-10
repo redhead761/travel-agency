@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class RoleIgnoreCaseConverter implements Converter<String, Role> {
-    MessageSource messageSource;
+    private final MessageSource messageSource;
 
     @Override
     public Role convert(String source) {

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class LoggingDebugAspect {
-
     @Pointcut("execution(public * com.epam.finaltask.service..*(..))")
     public void servicePackage() {
     }

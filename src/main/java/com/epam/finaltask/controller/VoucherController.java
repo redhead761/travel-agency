@@ -98,4 +98,3 @@ public interface VoucherController {
     })
     RemoteResponse changeVoucherStatus(UUID id, VoucherStatus status);
 }
-

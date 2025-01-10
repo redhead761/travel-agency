@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import java.util.UUID;
 
 public interface UserService {
-
     UserDTO register(UserDTO userDTO);
 
     UserDTO updateUser(UUID id, UserDTO userDTO);

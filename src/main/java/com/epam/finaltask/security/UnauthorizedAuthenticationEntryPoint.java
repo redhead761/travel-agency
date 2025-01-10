@@ -14,7 +14,6 @@ import java.io.IOException;
 @Component
 @Slf4j
 public class UnauthorizedAuthenticationEntryPoint implements AuthenticationEntryPoint {
-
     public static final String PLEASE_PROVIDE_A_VALID_JWT_TOKEN =
             "{ \"error\": \"You are not authenticated. Please provide a valid JWT token.\" }";
 

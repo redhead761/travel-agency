@@ -1,10 +1,9 @@
 package com.epam.finaltask.handler;
 
 import com.epam.finaltask.exception.TravelAgencyException;
+import com.epam.finaltask.service.LocalizationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,6 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
-
     private static final String TIMESTAMP = "timestamp";
     private static final String MESSAGE = "message";
     private static final String GLOBAL_EXCEPTION = "Global Exception";
@@ -33,7 +31,7 @@ public class GlobalExceptionHandler {
     private static final String LOG_MESSAGE = "ErrorId: {}, {}: {}";
     private static final String VALIDATION_ERROR = "Validation error";
 
-    private final MessageSource messageSource;
+    private final LocalizationService localizationService;
 
     @ExceptionHandler(TravelAgencyException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
@@ -70,10 +68,7 @@ public class GlobalExceptionHandler {
 
     private void getGlobalErrors(MethodArgumentNotValidException e, Map<String, Object> body) {
         List<String> globalErrors = e.getGlobalErrors().stream()
-                .map(objectError ->
-                        messageSource.getMessage(Objects.requireNonNull(objectError.getDefaultMessage()),
-                                null,
-                                LocaleContextHolder.getLocale()))
+                .map(objectError -> localizationService.getMessage(Objects.requireNonNull(objectError.getDefaultMessage())))
                 .toList();
         if (!globalErrors.isEmpty()) body.put("date", globalErrors);
     }
@@ -82,7 +77,8 @@ public class GlobalExceptionHandler {
         body.putAll(e.getFieldErrors().stream()
                 .collect(Collectors.groupingBy(FieldError::getField,
                         Collectors.mapping(
-                                fieldError -> getLocalizedMessage(fieldError.getDefaultMessage(), fieldError.getRejectedValue()),
+                                fieldError -> localizationService.getMessage(
+                                        fieldError.getDefaultMessage(), new Object[]{fieldError.getRejectedValue()}),
                                 Collectors.toList()))));
     }
 
@@ -90,9 +86,7 @@ public class GlobalExceptionHandler {
         String paramName = e.getName();
         String paramValue = (e.getValue() != null) ? e.getValue().toString() : "null";
         String requiredType = (e.getRequiredType() != null) ? e.getRequiredType().getSimpleName() : "Unknown";
-        return messageSource.getMessage("enum.not.found.exception",
-                new Object[]{paramValue, paramName, requiredType},
-                LocaleContextHolder.getLocale());
+        return localizationService.getMessage("enum.not.found.exception", new Object[]{paramValue, paramName, requiredType});
     }
 
     private void logError(String errorId, String exceptionType, String errorMessage) {
@@ -103,10 +97,4 @@ public class GlobalExceptionHandler {
         Map<String, Object> body = Map.of(TIMESTAMP, LocalDateTime.now(), MESSAGE, message, ERROR_ID, errorId);
         return ResponseEntity.status(status).body(body);
     }
-
-    private String getLocalizedMessage(String message, Object args) {
-        return messageSource.getMessage(message, new Object[]{args}, LocaleContextHolder.getLocale());
-    }
 }
-
-

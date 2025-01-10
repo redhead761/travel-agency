@@ -1,5 +1,6 @@
 package com.epam.finaltask.handler;
 
+import com.epam.finaltask.service.LocalizationService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -8,9 +9,6 @@ import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.DisabledException;
@@ -37,49 +35,48 @@ public class AuthExceptionHandler {
     private static final String LOG_MESSAGE = "ErrorId: {}, {}: {}";
     private static final String DISABLED_EXCEPTION = "Disabled Exception";
 
-    @Autowired
-    private MessageSource messageSource;
+    private final LocalizationService localizationService;
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Map<String, Object>> handleAuthenticationException(AuthenticationException e) {
         String errorId = UUID.randomUUID().toString();
         logError(errorId, AUTHENTICATION_EXCEPTION, e.getMessage());
-        return createUnauthResponseEntity(getLocalizedMessage("auth.exception"), errorId);
+        return createUnauthResponseEntity(localizationService.getMessage("auth.exception"), errorId);
     }
 
     @ExceptionHandler(DisabledException.class)
     public ResponseEntity<Map<String, Object>> handleDisabledException(DisabledException e) {
         String errorId = UUID.randomUUID().toString();
         logError(errorId, DISABLED_EXCEPTION, e.getMessage());
-        return createUnauthResponseEntity(getLocalizedMessage("disabled.exception"), errorId);
+        return createUnauthResponseEntity(localizationService.getMessage("disabled.exception"), errorId);
     }
 
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<Map<String, Object>> handleExpiredJwtException(ExpiredJwtException e) {
         String errorId = UUID.randomUUID().toString();
         logError(errorId, JWT_EXPIRED_EXCEPTION, e.getMessage());
-        return createUnauthResponseEntity(getLocalizedMessage("jwt.expired.exception"), errorId);
+        return createUnauthResponseEntity(localizationService.getMessage("jwt.expired.exception"), errorId);
     }
 
     @ExceptionHandler(MalformedJwtException.class)
     public ResponseEntity<Map<String, Object>> handleMalformedJwtException(MalformedJwtException e) {
         String errorId = UUID.randomUUID().toString();
         logError(errorId, MALFORMED_JWT_EXCEPTION, e.getMessage());
-        return createUnauthResponseEntity(getLocalizedMessage("token.format.exception"), errorId);
+        return createUnauthResponseEntity(localizationService.getMessage("token.format.exception"), errorId);
     }
 
     @ExceptionHandler(SignatureException.class)
     public ResponseEntity<Map<String, Object>> handleSignatureException(SignatureException e) {
         String errorId = UUID.randomUUID().toString();
         logError(errorId, JWT_SIGNATURE_EXCEPTION, e.getMessage());
-        return createUnauthResponseEntity(getLocalizedMessage("invalid.signature.exception"), errorId);
+        return createUnauthResponseEntity(localizationService.getMessage("invalid.signature.exception"), errorId);
     }
 
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<Map<String, Object>> handleJwtException(JwtException e) {
         String errorId = UUID.randomUUID().toString();
         logError(errorId, JWT_EXCEPTION, e.getMessage());
-        return createUnauthResponseEntity(getLocalizedMessage("invalid.jwt.exception"), errorId);
+        return createUnauthResponseEntity(localizationService.getMessage("invalid.jwt.exception"), errorId);
     }
 
     private ResponseEntity<Map<String, Object>> createUnauthResponseEntity(String message, String errorId) {
@@ -93,9 +90,5 @@ public class AuthExceptionHandler {
 
     private void logError(String errorId, String exceptionType, String errorMessage) {
         log.error(LOG_MESSAGE, errorId, exceptionType, errorMessage);
-    }
-
-    private String getLocalizedMessage(String message) {
-        return messageSource.getMessage(message, null, LocaleContextHolder.getLocale());
     }
 }

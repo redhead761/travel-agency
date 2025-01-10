@@ -18,10 +18,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-
 @Service
 public class JwtService {
-
     private final JwtBlackListRepository jwtBlacklistRepository;
     private final String secretKey;
     private final long jwtExpiration;
@@ -102,7 +100,4 @@ public class JwtService {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-
-
 }
-

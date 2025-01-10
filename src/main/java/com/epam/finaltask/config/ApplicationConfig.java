@@ -19,7 +19,6 @@ import java.security.SecureRandom;
 @RequiredArgsConstructor
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 public class ApplicationConfig {
-
     @Value("${security.bcrypt.strength}")
     private int strength;
 
@@ -38,4 +37,3 @@ public class ApplicationConfig {
         return new AuditConfig();
     }
 }
-

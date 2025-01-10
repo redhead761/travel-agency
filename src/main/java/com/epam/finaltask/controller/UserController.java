@@ -7,12 +7,19 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseEntity;
 
 import java.util.UUID;
 
 @Tag(name = "User", description = "Users func")
 public interface UserController {
+    @Operation(
+            summary = "Get all users",
+            description = "Retrieve a list of all available users"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Users successfully retrieved"),
+            @ApiResponse(responseCode = "500", description = "Unexpected internal error")
+    })
     RemoteResponse findAll(int page, int size);
 
     @Operation(
@@ -75,4 +82,3 @@ public interface UserController {
     })
     RemoteResponse balanceTopUp(UUID id, Double amount);
 }
-

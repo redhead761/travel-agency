@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class ExpiredTokenCleanupScheduler {
-
     private final JwtService jwtService;
 
     @Scheduled(cron = "0 0 0 * * ?")

@@ -21,16 +21,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Transactional
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService, UserDetailsService {
-
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
@@ -78,7 +75,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public void createAdmin(String adminName, String adminPassword) {
-        if (!userRepository.existsByUsername(adminName)) {
+        if (userRepository.doesNotExistByUsername(adminName)) {
             User admin = User.builder()
                     .username(adminName)
                     .password(passwordEncoder.encode(adminPassword))
@@ -114,11 +111,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userDTO.setBalance(0.0);
     }
 
-
     private static void setUpdateFields(UserDTO userDTO, User userToUpdate) {
         userToUpdate.setUsername(userDTO.getUsername());
         userToUpdate.setPhoneNumber(userDTO.getPhoneNumber());
         userToUpdate.setBalance(userDTO.getBalance());
     }
 }
-

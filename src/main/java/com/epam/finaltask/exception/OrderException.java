@@ -14,5 +14,4 @@ public class OrderException extends TravelAgencyException {
         super(HttpStatus.BAD_REQUEST,
                 messageSource.getMessage("order.balance", new Object[]{balance}, LocaleContextHolder.getLocale()));
     }
-
 }
