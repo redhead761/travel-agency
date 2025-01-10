@@ -3,7 +3,6 @@ package com.epam.finaltask.controller.impl;
 import com.epam.finaltask.controller.UserController;
 import com.epam.finaltask.dto.RemoteResponse;
 import com.epam.finaltask.dto.UserDTO;
-import com.epam.finaltask.dto.group.OnCreate;
 import com.epam.finaltask.model.Role;
 import com.epam.finaltask.service.LocalizationService;
 import com.epam.finaltask.service.UserService;
@@ -44,7 +43,7 @@ public class UserControllerImpl implements UserController {
     @Override
     @ResponseStatus(CREATED)
     @PostMapping("/register")
-    public RemoteResponse registerUser(@Validated(OnCreate.class) @RequestBody UserDTO userDto) {
+    public RemoteResponse registerUser(@Validated @RequestBody UserDTO userDto) {
         UserDTO createdUserDto = userService.register(userDto);
         return RemoteResponse.builder()
                 .succeeded(true)

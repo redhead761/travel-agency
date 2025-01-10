@@ -3,7 +3,6 @@ package com.epam.finaltask.controller.impl;
 import com.epam.finaltask.controller.VoucherController;
 import com.epam.finaltask.dto.RemoteResponse;
 import com.epam.finaltask.dto.VoucherDTO;
-import com.epam.finaltask.dto.group.OnCreate;
 import com.epam.finaltask.dto.group.OnUpdate;
 import com.epam.finaltask.model.HotelType;
 import com.epam.finaltask.model.TourType;
@@ -67,7 +66,7 @@ public class VoucherControllerImpl implements VoucherController {
     @PostMapping
     @ResponseStatus(CREATED)
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
-    public RemoteResponse createVoucher(@Validated(OnCreate.class) @RequestBody VoucherDTO voucherDTO) {
+    public RemoteResponse createVoucher(@Validated @RequestBody VoucherDTO voucherDTO) {
         VoucherDTO createdVoucherDto = voucherService.create(voucherDTO);
         return RemoteResponse.builder()
                 .succeeded(true)
