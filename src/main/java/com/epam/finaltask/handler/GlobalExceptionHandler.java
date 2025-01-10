@@ -32,6 +32,7 @@ public class GlobalExceptionHandler {
     private static final String RESPONSE_STATUS_EXCEPTION = "TravelAgency Exception";
     private static final String LOG_MESSAGE = "ErrorId: {}, {}: {}";
     private static final String VALIDATION_ERROR = "Validation error";
+
     private final MessageSource messageSource;
 
     @ExceptionHandler(TravelAgencyException.class)
@@ -74,7 +75,7 @@ public class GlobalExceptionHandler {
                                 null,
                                 LocaleContextHolder.getLocale()))
                 .toList();
-        if (!globalErrors.isEmpty()) body.put("validate class errors", globalErrors);
+        if (!globalErrors.isEmpty()) body.put("date", globalErrors);
     }
 
     private void getFieldsErrors(MethodArgumentNotValidException e, Map<String, Object> body) {

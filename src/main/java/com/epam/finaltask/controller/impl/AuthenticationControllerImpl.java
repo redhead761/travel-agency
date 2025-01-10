@@ -8,18 +8,16 @@ import com.epam.finaltask.dto.RemoteResponse;
 import com.epam.finaltask.security.JwtService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-
 public class AuthenticationControllerImpl implements AuthenticationController {
 
     private final AuthenticationService service;
@@ -27,17 +25,16 @@ public class AuthenticationControllerImpl implements AuthenticationController {
     private static final String SUCCESSFULLY_AUTHENTICATE = "User is successfully authenticated";
 
     @Override
+    @ResponseStatus(ACCEPTED)
     @PostMapping("/login")
-    public ResponseEntity<RemoteResponse> authenticate(@RequestBody @Valid Credentials credentials) {
+    public RemoteResponse authenticate(@RequestBody @Valid Credentials credentials) {
         JwtTokenDto token = service.authenticate(credentials);
-
-        return ResponseEntity.status(HttpStatus.ACCEPTED)
-                .body(RemoteResponse.builder()
-                        .succeeded(true)
-                        .statusCode(OK.name())
-                        .statusMessage(SUCCESSFULLY_AUTHENTICATE)
-                        .results(List.of(token))
-                        .build());
+        return RemoteResponse.builder()
+                .succeeded(true)
+                .statusCode(OK.name())
+                .statusMessage(SUCCESSFULLY_AUTHENTICATE)
+                .results(List.of(token))
+                .build();
     }
 
     @Override

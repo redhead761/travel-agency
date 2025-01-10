@@ -4,10 +4,8 @@ import com.epam.finaltask.controller.UserController;
 import com.epam.finaltask.dto.RemoteResponse;
 import com.epam.finaltask.dto.UserDTO;
 import com.epam.finaltask.dto.group.OnCreate;
-import com.epam.finaltask.dto.group.OnUpdate;
 import com.epam.finaltask.model.Role;
 import com.epam.finaltask.service.UserService;
-import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -34,17 +32,17 @@ public class UserControllerImpl implements UserController {
     @Override
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @GetMapping
-    public ResponseEntity<RemoteResponse> findAll(@RequestParam(defaultValue = "0") int page,
+    public RemoteResponse findAll(@RequestParam(defaultValue = "1") int page,
                                                   @RequestParam(defaultValue = "10") int size) {
         Page<UserDTO> result = userService.findAll(page, size);
-        return ResponseEntity.ok()
-                .body(RemoteResponse.builder()
+        return
+                RemoteResponse.builder()
                         .succeeded(true)
                         .statusCode(OK.name())
                         .statusMessage(getLocalizedMessage("users.obtained"))
                         .results(result.getContent())
                         .totalPages(result.getTotalPages())
-                        .build());
+                        .build();
     }
 
     @Override
@@ -77,7 +75,6 @@ public class UserControllerImpl implements UserController {
     @GetMapping("/{id}")
     public ResponseEntity<RemoteResponse> getUser(@PathVariable UUID id) {
         UserDTO userDTO = userService.getUserById(id);
-
         return ResponseEntity.ok()
                 .body(RemoteResponse.builder()
                         .succeeded(true)

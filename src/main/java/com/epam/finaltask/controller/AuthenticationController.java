@@ -19,7 +19,7 @@ public interface AuthenticationController {
             @ApiResponse(responseCode = "423", description = "Locked, access is denied"),
             @ApiResponse(responseCode = "500", description = "Unexpected internal error")
     })
-    ResponseEntity<RemoteResponse> authenticate(Credentials credentials);
+    RemoteResponse authenticate(Credentials credentials);
 
     @Operation(summary = "User logout",
             description = "Logs out the user and invalidates the JWT token.")

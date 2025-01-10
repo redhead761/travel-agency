@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Tag(name = "User", description = "Users func")
 public interface UserController {
-    ResponseEntity<RemoteResponse> findAll(int page, int size);
+    RemoteResponse findAll(int page, int size);
 
     @Operation(
             summary = "Register a new user",
