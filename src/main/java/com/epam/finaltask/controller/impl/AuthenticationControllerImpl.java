@@ -6,6 +6,7 @@ import com.epam.finaltask.auth.AuthenticationService;
 import com.epam.finaltask.controller.AuthenticationController;
 import com.epam.finaltask.dto.RemoteResponse;
 import com.epam.finaltask.security.JwtService;
+import com.epam.finaltask.service.LocalizationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class AuthenticationControllerImpl implements AuthenticationController {
 
     private final AuthenticationService service;
     private final JwtService jwtService;
-    private static final String SUCCESSFULLY_AUTHENTICATE = "User is successfully authenticated";
+    private final LocalizationService localizationService;
 
     @Override
     @ResponseStatus(ACCEPTED)
@@ -32,7 +33,7 @@ public class AuthenticationControllerImpl implements AuthenticationController {
         return RemoteResponse.builder()
                 .succeeded(true)
                 .statusCode(OK.name())
-                .statusMessage(SUCCESSFULLY_AUTHENTICATE)
+                .statusMessage(localizationService.getMessage("auth.success"))
                 .results(List.of(token))
                 .build();
     }

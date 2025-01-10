@@ -23,7 +23,7 @@ public interface UserController {
             @ApiResponse(responseCode = "201", description = "User successfully registered"),
             @ApiResponse(responseCode = "400", description = "Validation error, e.g., invalid password or missing data")
     })
-    ResponseEntity<RemoteResponse> registerUser(UserDTO userDTO);
+    RemoteResponse registerUser(UserDTO userDTO);
 
     @Operation(
             summary = "Update user data",
@@ -33,7 +33,7 @@ public interface UserController {
             @ApiResponse(responseCode = "200", description = "User data successfully updated"),
             @ApiResponse(responseCode = "400", description = "Validation error, e.g., invalid input or missing data")
     })
-    ResponseEntity<RemoteResponse> updateUser(UUID id, UserDTO userDTO);
+    RemoteResponse updateUser(UUID id, UserDTO userDTO);
 
     @Operation(
             summary = "Retrieve user by id",
@@ -43,7 +43,7 @@ public interface UserController {
             @ApiResponse(responseCode = "200", description = "User successfully retrieved"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
-    ResponseEntity<RemoteResponse> getUser(UUID id);
+    RemoteResponse getUser(UUID id);
 
     @Operation(
             summary = "Change user account status",
@@ -53,7 +53,7 @@ public interface UserController {
             @ApiResponse(responseCode = "200", description = "Account status successfully updated"),
             @ApiResponse(responseCode = "400", description = "Validation error, e.g., invalid input or status")
     })
-    ResponseEntity<RemoteResponse> changeUserAccountStatus(UUID id, boolean accountStatus);
+    RemoteResponse changeUserAccountStatus(UUID id, boolean accountStatus);
 
     @Operation(
             summary = "Change user role",
@@ -63,7 +63,7 @@ public interface UserController {
             @ApiResponse(responseCode = "200", description = "User role successfully updated"),
             @ApiResponse(responseCode = "400", description = "Validation error, e.g., invalid input or role")
     })
-    ResponseEntity<RemoteResponse> changeRole(UUID id, Role role);
+    RemoteResponse changeRole(UUID id, Role role);
 
     @Operation(
             summary = "Change user balance",
@@ -73,8 +73,6 @@ public interface UserController {
             @ApiResponse(responseCode = "200", description = "User balance successfully updated"),
             @ApiResponse(responseCode = "400", description = "Validation error, e.g., invalid input or amount")
     })
-    ResponseEntity<RemoteResponse> balanceTopUp(UUID id, Double amount);
-
-
+    RemoteResponse balanceTopUp(UUID id, Double amount);
 }
 
