@@ -37,7 +37,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ResponseEntity<Map<String, Object>> notFoundException(TravelAgencyException e) {
         logError(e.getErrorId(), RESPONSE_STATUS_EXCEPTION, e.getReason());
-        return createResponseEntity(e.getStatusCode(), e.getReason(), e.getErrorId());
+        String message = localizationService.getMessage(e.getReason(), e.getArgs());
+        return createResponseEntity(e.getStatusCode(), message, e.getErrorId());
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
