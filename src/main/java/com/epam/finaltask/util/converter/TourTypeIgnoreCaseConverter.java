@@ -1,12 +1,10 @@
 package com.epam.finaltask.util.converter;
 
 import com.epam.finaltask.model.TourType;
-import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class TourTypeIgnoreCaseConverter implements Converter<String, TourType> {
     @Override
     public TourType convert(String source) {

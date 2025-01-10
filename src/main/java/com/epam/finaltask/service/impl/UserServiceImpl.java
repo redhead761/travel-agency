@@ -2,6 +2,7 @@ package com.epam.finaltask.service.impl;
 
 import com.epam.finaltask.dto.TravelAgencyUserDetails;
 import com.epam.finaltask.dto.UserDTO;
+import com.epam.finaltask.exception.AmountException;
 import com.epam.finaltask.exception.UserException;
 import com.epam.finaltask.mapper.UserMapper;
 import com.epam.finaltask.model.Role;
@@ -92,7 +93,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void balanceTopUp(UUID id, Double amount) {
+    public void balanceTopUp(UUID id, String stringAmount) {
+        Double amount = checkValidAmount(stringAmount);
         User user = userRepository.findById(id).orElseThrow(() -> new UserException(id));
         user.setBalance(user.getBalance() + amount);
     }
@@ -113,5 +115,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userToUpdate.setUsername(userDTO.getUsername());
         userToUpdate.setPhoneNumber(userDTO.getPhoneNumber());
         userToUpdate.setBalance(userDTO.getBalance());
+    }
+
+    private Double checkValidAmount(String stringAmount) {
+        try {
+            double amount = Double.parseDouble(stringAmount);
+            if (amount <= 0) {
+                throw new AmountException();
+            }
+            return amount;
+        } catch (NumberFormatException e) {
+            throw new AmountException();
+        }
     }
 }

@@ -107,7 +107,7 @@ public class UserControllerImpl implements UserController {
     @Override
     @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     @PatchMapping("/{id}/top_up")
-    public RemoteResponse balanceTopUp(@PathVariable UUID id, @RequestParam Double amount) {
+    public RemoteResponse balanceTopUp(@PathVariable UUID id, @RequestParam String amount) {
         userService.balanceTopUp(id, amount);
         return RemoteResponse.builder()
                 .succeeded(true)

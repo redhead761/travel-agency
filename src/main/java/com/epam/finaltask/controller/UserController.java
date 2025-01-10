@@ -80,5 +80,5 @@ public interface UserController {
             @ApiResponse(responseCode = "200", description = "User balance successfully updated"),
             @ApiResponse(responseCode = "400", description = "Validation error, e.g., invalid input or amount")
     })
-    RemoteResponse balanceTopUp(UUID id, Double amount);
+    RemoteResponse balanceTopUp(UUID id, String amount);
 }
