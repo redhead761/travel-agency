@@ -39,7 +39,6 @@ security:
     name: ${ADMIN_NAME}
     password: ${ADMIN_PASSWORD}
 
-
 management:
   endpoints:
     enabled-by-default: false
@@ -102,7 +101,7 @@ spring:
   config:
     activate:
       on-profile: test
-    import: "optional:file:.env-test[.properties]"
+    import: "optional:file:.env-test.properties"
   h2:
     console:
       enabled: true
@@ -114,3 +113,18 @@ spring:
 logging:
   level:
     com.epam.finaltask: DEBUG
+
+#management:
+#  endpoints:
+#    enabled-by-default: false
+#    web:
+#      exposure:
+#        include: none
+#  prometheus:
+#    metrics:
+#      export:
+#        enabled: false
+#
+#springdoc:
+#  api-docs:
+#    enabled: false

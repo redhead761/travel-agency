@@ -5,9 +5,9 @@ databaseChangeLog:
       changes:
         - sqlFile:
             path: db/changelog/h2/database-creation.sql
-  - changeSet:
-      id: FillingDatabaseWithData
-      author: oleksandr.panchenko
-      changes:
-        - sqlFile:
-            path: db/changelog/h2/database-filling.sql
+#  - changeSet:
+#      id: FillingDatabaseWithData
+#      author: oleksandr.panchenko
+#      changes:
+#        - sqlFile:
+#            path: db/changelog/h2/database-filling.sql
