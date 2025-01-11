@@ -49,7 +49,7 @@ public class UserControllerImpl implements UserController {
         UserDTO createdUserDto = userService.register(userDto);
         return RemoteResponse.builder()
                 .succeeded(true)
-                .statusCode(OK.name())
+                .statusCode(CREATED.name())
                 .statusMessage(localizationService.getMessage("users.registered"))
                 .results(List.of(createdUserDto))
                 .build();
@@ -113,7 +113,7 @@ public class UserControllerImpl implements UserController {
         userService.balanceTopUp(id, amount.getAmount());
         return RemoteResponse.builder()
                 .succeeded(true)
-                .statusMessage(OK.name())
+                .statusCode(OK.name())
                 .statusMessage(localizationService.getMessage("user.balance.changed"))
                 .build();
     }

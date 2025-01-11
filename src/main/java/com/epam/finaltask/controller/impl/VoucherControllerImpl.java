@@ -70,7 +70,7 @@ public class VoucherControllerImpl implements VoucherController {
         VoucherDTO createdVoucherDto = voucherService.create(voucherDTO);
         return RemoteResponse.builder()
                 .succeeded(true)
-                .statusCode(OK.name())
+                .statusCode(CREATED.name())
                 .statusMessage(localizationService.getMessage("voucher.created"))
                 .results(List.of(createdVoucherDto))
                 .build();

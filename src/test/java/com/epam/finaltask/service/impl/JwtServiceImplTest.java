@@ -55,7 +55,6 @@ class JwtServiceImplTest {
     void testGenerateTokenWithExtraClaims() {
         TravelAgencyUserDetails userDetails = createUserDetails("user1", Role.USER);
 
-        // Используем изменяемую HashMap для дополнительных данных
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("customClaim", "value");
 
@@ -147,5 +146,4 @@ class JwtServiceImplTest {
 
         return new TravelAgencyUserDetails(user);
     }
-
 }
