@@ -2,11 +2,13 @@ package com.epam.finaltask.handler;
 
 import com.epam.finaltask.exception.TravelAgencyException;
 import com.epam.finaltask.service.LocalizationService;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -60,11 +62,26 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, Object>> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        String errorId = UUID.randomUUID().toString();
+        String message = getMessage(e);
+        logError(errorId, VALIDATION_ERROR, e.getMessage());
+        return createResponseEntity(HttpStatus.BAD_REQUEST, message, errorId);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGlobalException(Exception e) {
         String errorId = UUID.randomUUID().toString();
         logError(errorId, GLOBAL_EXCEPTION, e.getMessage());
         return createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, UNEXPECTED_ERROR_OCCURRED, errorId);
+    }
+
+    private String getMessage(HttpMessageNotReadableException e) {
+        InvalidFormatException cause = (InvalidFormatException) e.getCause();
+        String fieldName = cause.getPath().get(0).getFieldName();
+        Object invalidValue = cause.getValue();
+        return localizationService.getMessage("invalid.value", new Object[]{fieldName, invalidValue});
     }
 
     private void getGlobalErrors(MethodArgumentNotValidException e, Map<String, Object> body) {

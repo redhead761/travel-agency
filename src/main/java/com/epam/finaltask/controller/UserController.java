@@ -1,6 +1,7 @@
 package com.epam.finaltask.controller;
 
 import com.epam.finaltask.dto.RemoteResponse;
+import com.epam.finaltask.dto.RequestAmount;
 import com.epam.finaltask.dto.UserDTO;
 import com.epam.finaltask.model.Role;
 import io.swagger.v3.oas.annotations.Operation;
@@ -80,5 +81,5 @@ public interface UserController {
             @ApiResponse(responseCode = "200", description = "User balance successfully updated"),
             @ApiResponse(responseCode = "400", description = "Validation error, e.g., invalid input or amount")
     })
-    RemoteResponse balanceTopUp(UUID id, String amount);
+    RemoteResponse balanceTopUp(UUID id, RequestAmount amount);
 }

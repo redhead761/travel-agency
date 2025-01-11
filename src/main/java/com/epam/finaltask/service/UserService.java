@@ -21,5 +21,5 @@ public interface UserService {
 
     Page<UserDTO> findAll(int page, int size);
 
-    void balanceTopUp(UUID id, String amount);
+    void balanceTopUp(UUID id, Double amount);
 }

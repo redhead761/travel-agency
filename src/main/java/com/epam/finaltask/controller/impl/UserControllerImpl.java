@@ -2,10 +2,12 @@ package com.epam.finaltask.controller.impl;
 
 import com.epam.finaltask.controller.UserController;
 import com.epam.finaltask.dto.RemoteResponse;
+import com.epam.finaltask.dto.RequestAmount;
 import com.epam.finaltask.dto.UserDTO;
 import com.epam.finaltask.model.Role;
 import com.epam.finaltask.service.LocalizationService;
 import com.epam.finaltask.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -107,8 +109,8 @@ public class UserControllerImpl implements UserController {
     @Override
     @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     @PatchMapping("/{id}/top_up")
-    public RemoteResponse balanceTopUp(@PathVariable UUID id, @RequestParam String amount) {
-        userService.balanceTopUp(id, amount);
+    public RemoteResponse balanceTopUp(@PathVariable UUID id, @Valid @RequestBody RequestAmount amount) {
+        userService.balanceTopUp(id, amount.getAmount());
         return RemoteResponse.builder()
                 .succeeded(true)
                 .statusMessage(OK.name())
