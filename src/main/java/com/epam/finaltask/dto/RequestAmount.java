@@ -14,5 +14,5 @@ import lombok.NoArgsConstructor;
 public class RequestAmount {
     @NotNull(message = "amount.not.null")
     @Positive(message = "amount.positive")
-    Double amount;
+    private Double amount;
 }

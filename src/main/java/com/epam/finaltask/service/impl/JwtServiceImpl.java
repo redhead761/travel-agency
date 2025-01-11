@@ -1,8 +1,9 @@
-package com.epam.finaltask.security;
+package com.epam.finaltask.service.impl;
 
 import com.epam.finaltask.dto.TravelAgencyUserDetails;
 import com.epam.finaltask.model.JwtBlackList;
 import com.epam.finaltask.repository.JwtBlackListRepository;
+import com.epam.finaltask.service.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -19,51 +20,57 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
-public class JwtService {
+public class JwtServiceImpl implements JwtService {
     private final JwtBlackListRepository jwtBlacklistRepository;
+
     private final String secretKey;
     private final long jwtExpiration;
 
-    public JwtService(@Value("${security.jwt.secret-key}") String secretKey,
-                      @Value("${security.jwt.expiration-time}") long jwtExpiration,
-                      JwtBlackListRepository jwtBlacklistRepository) {
+    public JwtServiceImpl(@Value("${security.jwt.secret-key}") String secretKey,
+                          @Value("${security.jwt.expiration-time}") long jwtExpiration,
+                          JwtBlackListRepository jwtBlacklistRepository) {
         this.jwtBlacklistRepository = jwtBlacklistRepository;
         this.secretKey = secretKey;
         this.jwtExpiration = jwtExpiration;
     }
 
+    @Override
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
+    @Override
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
 
+    @Override
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return buildToken(extraClaims, (TravelAgencyUserDetails) userDetails, jwtExpiration);
     }
 
+    @Override
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-
         return (username.equals(userDetails.getUsername())) && isNotInBlacklist(token);
     }
 
+    @Override
     public void saveToBlacklist(String token) {
         JwtBlackList jwtBlacklist = new JwtBlackList(token, extractExpiration(token));
         jwtBlacklistRepository.save(jwtBlacklist);
     }
 
+    @Override
     public void deleteExpiredTokens() {
         jwtBlacklistRepository.deleteAllByExpirationTimeBefore(new Date());
     }
 
-    private boolean isNotInBlacklist(String token) {
+    boolean isNotInBlacklist(String token) {
         return !jwtBlacklistRepository.existsById(token);
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
@@ -83,7 +90,7 @@ public class JwtService {
                 .compact();
     }
 
-    private Date extractExpiration(String token) {
+    Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
@@ -96,7 +103,7 @@ public class JwtService {
                 .getBody();
     }
 
-    private Key getSignInKey() {
+    Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }

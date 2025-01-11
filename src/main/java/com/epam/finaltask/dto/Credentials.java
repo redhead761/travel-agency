@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Credentials {
     @NotNull(message = "Username is required")
-    String username;
+    private String username;
 
     @NotNull(message = "Password is required")
-    String password;
+    private String password;
 }

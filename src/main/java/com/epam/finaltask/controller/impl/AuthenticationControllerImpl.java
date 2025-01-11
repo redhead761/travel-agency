@@ -2,10 +2,10 @@ package com.epam.finaltask.controller.impl;
 
 import com.epam.finaltask.dto.Credentials;
 import com.epam.finaltask.dto.JwtTokenDto;
-import com.epam.finaltask.auth.AuthenticationService;
 import com.epam.finaltask.controller.AuthenticationController;
 import com.epam.finaltask.dto.RemoteResponse;
-import com.epam.finaltask.security.JwtService;
+import com.epam.finaltask.service.AuthenticationService;
+import com.epam.finaltask.service.JwtService;
 import com.epam.finaltask.service.LocalizationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
