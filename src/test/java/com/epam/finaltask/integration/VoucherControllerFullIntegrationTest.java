@@ -51,7 +51,7 @@ public class VoucherControllerFullIntegrationTest {
     @WithMockUser(authorities = {"ROLE_USER", "ROLE_ADMIN"})
     void testFindAllVouchers() throws Exception {
         addVoucher("Summer Vacation");
-        mockMvc.perform(get("/vouchers?page=1&size=8"))
+        mockMvc.perform(get("/vouchers?page=1&size=8&hotelType=FIVE_STARS&tourType=ECO&transferType=PLANE"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.succeeded", is(true)))
                 .andExpect(jsonPath("$.results", hasSize(1)))
