@@ -1,4 +1,4 @@
-CREATE TABLE "users"
+CREATE TABLE users
 (
     id             uuid     NOT NULL PRIMARY KEY,
     username       VARCHAR(45)  NOT NULL UNIQUE,
@@ -21,8 +21,8 @@ CREATE TABLE voucher
     status        VARCHAR(50)  NOT NULL,
     arrival_date  DATE         NOT NULL,
     eviction_date DATE         NOT NULL,
-    user_id       CHAR(32),
+    user_id       CHAR(36),
     is_hot        BOOLEAN      NOT NULL DEFAULT FALSE,
-    FOREIGN KEY (user_id) REFERENCES "users" (id)
+    FOREIGN KEY (user_id) REFERENCES users (id)
 );
 

@@ -16,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User implements BaseEntity<UUID> {
     @Id
     @JdbcTypeCode(SqlTypes.CHAR)
