@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userDTO.setBalance(0.0);
     }
 
-    private static void setUpdateFields(UserDTO userDTO, User userToUpdate) {
+    private void setUpdateFields(UserDTO userDTO, User userToUpdate) {
         userToUpdate.setUsername(userDTO.getUsername());
         userToUpdate.setPhoneNumber(userDTO.getPhoneNumber());
         userToUpdate.setBalance(userDTO.getBalance());

@@ -159,7 +159,7 @@ class VoucherControllerImplTest {
         UUID id = UUID.randomUUID();
         VoucherStatus status = VoucherStatus.PAID;
         VoucherDTO updatedVoucherDto = new VoucherDTO();
-        when(voucherService.changeTourStatus(id, status)).thenReturn(updatedVoucherDto);
+        when(voucherService.changeVoucherStatus(id, status)).thenReturn(updatedVoucherDto);
         when(localizationService.getMessage("voucher.status.changed")).thenReturn("Voucher status changed");
 
         RemoteResponse response = voucherController.changeVoucherStatus(id, status);

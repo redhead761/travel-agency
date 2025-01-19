@@ -20,7 +20,7 @@ public interface VoucherService {
 
     VoucherDTO changeHotStatus(UUID id, boolean hotStatus);
 
-    VoucherDTO changeTourStatus(UUID id, VoucherStatus status);
+    VoucherDTO changeVoucherStatus(UUID id, VoucherStatus status);
 
     Page<VoucherDTO> findAllByFilter(
             TourType tourType, TransferType transferType, HotelType hotelType, UUID userId,

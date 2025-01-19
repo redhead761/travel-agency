@@ -132,7 +132,7 @@ public class VoucherControllerImpl implements VoucherController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER')")
     @PatchMapping("/{id}/status")
     public RemoteResponse changeVoucherStatus(@PathVariable UUID id, @RequestParam VoucherStatus status) {
-        VoucherDTO updatedVoucherDto = voucherService.changeTourStatus(id, status);
+        VoucherDTO updatedVoucherDto = voucherService.changeVoucherStatus(id, status);
         return RemoteResponse.builder()
                 .succeeded(true)
                 .statusCode(OK.name())

@@ -75,7 +75,7 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    public VoucherDTO changeTourStatus(UUID id, VoucherStatus status) {
+    public VoucherDTO changeVoucherStatus(UUID id, VoucherStatus status) {
         Voucher voucher = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id));
         refund(voucher);
         voucher.setStatus(status);
@@ -98,7 +98,7 @@ public class VoucherServiceImpl implements VoucherService {
         return voucherMapper.toVoucherDTO(voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id)));
     }
 
-    private static void addVoucherToUser(User user, Voucher orderedVoucher) {
+    private void addVoucherToUser(User user, Voucher orderedVoucher) {
         if (user.getVouchers() == null) {
             user.setVouchers(new ArrayList<>());
         }
@@ -112,7 +112,7 @@ public class VoucherServiceImpl implements VoucherService {
         return voucherRepository.save(voucher);
     }
 
-    private static void setVoucherFields(Voucher voucherForUpdate, Voucher newVoucher) {
+    private void setVoucherFields(Voucher voucherForUpdate, Voucher newVoucher) {
         voucherForUpdate.setTitle(newVoucher.getTitle());
         voucherForUpdate.setDescription(newVoucher.getDescription());
         voucherForUpdate.setPrice(newVoucher.getPrice());

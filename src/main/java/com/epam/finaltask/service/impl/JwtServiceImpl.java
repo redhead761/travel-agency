@@ -70,7 +70,7 @@ public class JwtServiceImpl implements JwtService {
         return !jwtBlacklistRepository.existsById(token);
     }
 
-    <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
@@ -90,7 +90,7 @@ public class JwtServiceImpl implements JwtService {
                 .compact();
     }
 
-    Date extractExpiration(String token) {
+    private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
@@ -103,7 +103,7 @@ public class JwtServiceImpl implements JwtService {
                 .getBody();
     }
 
-    Key getSignInKey() {
+    private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }

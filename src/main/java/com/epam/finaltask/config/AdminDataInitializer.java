@@ -15,6 +15,7 @@ public class AdminDataInitializer implements CommandLineRunner {
     private String adminName;
     @Value("${security.admin.password}")
     private String adminPassword;
+
     private final UserService userService;
 
     @Override
