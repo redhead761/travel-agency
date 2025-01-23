@@ -1,13 +1,14 @@
 package com.epam.finaltask.controller.impl;
 
 import com.epam.finaltask.controller.VoucherController;
+import com.epam.finaltask.dto.HotStatusRequest;
 import com.epam.finaltask.dto.RemoteResponse;
+import com.epam.finaltask.dto.VoucherStatusRequest;
 import com.epam.finaltask.dto.VoucherDTO;
 import com.epam.finaltask.dto.group.OnUpdate;
 import com.epam.finaltask.model.HotelType;
 import com.epam.finaltask.model.TourType;
 import com.epam.finaltask.model.TransferType;
-import com.epam.finaltask.model.VoucherStatus;
 import com.epam.finaltask.service.LocalizationService;
 import com.epam.finaltask.service.VoucherService;
 import lombok.RequiredArgsConstructor;
@@ -118,8 +119,9 @@ public class VoucherControllerImpl implements VoucherController {
     @Override
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER')")
     @PatchMapping("/{id}/hot")
-    public RemoteResponse changeHotStatus(@PathVariable UUID id, @RequestParam boolean status) {
-        VoucherDTO updatedVoucherDto = voucherService.changeHotStatus(id, status);
+    public RemoteResponse changeHotStatus(@PathVariable UUID id,
+                                          @RequestBody HotStatusRequest hotStatusRequest) {
+        VoucherDTO updatedVoucherDto = voucherService.changeHotStatus(id, hotStatusRequest);
         return RemoteResponse.builder()
                 .succeeded(true)
                 .statusCode(OK.name())
@@ -131,8 +133,9 @@ public class VoucherControllerImpl implements VoucherController {
     @Override
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER')")
     @PatchMapping("/{id}/status")
-    public RemoteResponse changeVoucherStatus(@PathVariable UUID id, @RequestParam VoucherStatus status) {
-        VoucherDTO updatedVoucherDto = voucherService.changeVoucherStatus(id, status);
+    public RemoteResponse changeVoucherStatus(@PathVariable UUID id,
+                                              @RequestBody VoucherStatusRequest voucherStatusRequest) {
+        VoucherDTO updatedVoucherDto = voucherService.changeVoucherStatus(id, voucherStatusRequest);
         return RemoteResponse.builder()
                 .succeeded(true)
                 .statusCode(OK.name())

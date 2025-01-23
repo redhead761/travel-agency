@@ -45,4 +45,6 @@ public class UserDTO {
     private Double balance;
 
     private boolean accountStatus;
+
+    private int version;
 }

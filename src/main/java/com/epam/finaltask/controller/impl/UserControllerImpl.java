@@ -2,7 +2,7 @@ package com.epam.finaltask.controller.impl;
 
 import com.epam.finaltask.controller.UserController;
 import com.epam.finaltask.dto.RemoteResponse;
-import com.epam.finaltask.dto.RequestAmount;
+import com.epam.finaltask.dto.AmountRequest;
 import com.epam.finaltask.dto.UserDTO;
 import com.epam.finaltask.model.Role;
 import com.epam.finaltask.service.LocalizationService;
@@ -109,7 +109,7 @@ public class UserControllerImpl implements UserController {
     @Override
     @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     @PatchMapping("/{id}/top_up")
-    public RemoteResponse balanceTopUp(@PathVariable UUID id, @Valid @RequestBody RequestAmount amount) {
+    public RemoteResponse balanceTopUp(@PathVariable UUID id, @Valid @RequestBody AmountRequest amount) {
         userService.balanceTopUp(id, amount.getAmount());
         return RemoteResponse.builder()
                 .succeeded(true)

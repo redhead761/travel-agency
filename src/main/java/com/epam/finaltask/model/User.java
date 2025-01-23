@@ -38,4 +38,7 @@ public class User implements BaseEntity<UUID> {
     private Double balance;
 
     private boolean accountStatus;
+
+    @Version
+    private int version;
 }

@@ -3,6 +3,7 @@ package com.epam.finaltask.handler;
 import com.epam.finaltask.exception.TravelAgencyException;
 import com.epam.finaltask.service.LocalizationService;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,7 @@ public class GlobalExceptionHandler {
     private static final String RESPONSE_STATUS_EXCEPTION = "TravelAgency Exception";
     private static final String LOG_MESSAGE = "ErrorId: {}, {}: {}";
     private static final String VALIDATION_ERROR = "Validation error";
+    private static final String OPTIMISTIC_LOCK_EXCEPTION = "Optimistic lock exception";
 
     private final LocalizationService localizationService;
 
@@ -75,6 +77,13 @@ public class GlobalExceptionHandler {
         String errorId = UUID.randomUUID().toString();
         logError(errorId, GLOBAL_EXCEPTION, e.getMessage());
         return createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, UNEXPECTED_ERROR_OCCURRED, errorId);
+    }
+
+    @ExceptionHandler(OptimisticLockException.class)
+    public ResponseEntity<Map<String, Object>> handleOptimisticLockException(OptimisticLockException e) {
+        String errorId = UUID.randomUUID().toString();
+        logError(errorId, OPTIMISTIC_LOCK_EXCEPTION, e.getMessage());
+        return createResponseEntity(HttpStatus.CONFLICT, localizationService.getMessage("conflict"), errorId);
     }
 
     private String getMessage(HttpMessageNotReadableException e) {

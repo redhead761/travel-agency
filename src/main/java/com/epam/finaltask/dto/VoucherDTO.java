@@ -67,4 +67,6 @@ public class VoucherDTO {
 
     @NotNull(message = "hot.not.blank")
     private String hot;
+
+    private int version;
 }

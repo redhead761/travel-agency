@@ -1,11 +1,12 @@
 package com.epam.finaltask.controller;
 
+import com.epam.finaltask.dto.HotStatusRequest;
 import com.epam.finaltask.dto.RemoteResponse;
+import com.epam.finaltask.dto.VoucherStatusRequest;
 import com.epam.finaltask.dto.VoucherDTO;
 import com.epam.finaltask.model.HotelType;
 import com.epam.finaltask.model.TourType;
 import com.epam.finaltask.model.TransferType;
-import com.epam.finaltask.model.VoucherStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -86,7 +87,7 @@ public interface VoucherController {
             @ApiResponse(responseCode = "200", description = "Voucher hot status successfully updated"),
             @ApiResponse(responseCode = "400", description = "Validation error, e.g., invalid input")
     })
-    RemoteResponse changeHotStatus(UUID id, boolean status);
+    RemoteResponse changeHotStatus(UUID id, HotStatusRequest hotStatusRequest);
 
     @Operation(
             summary = "Change voucher status",
@@ -96,5 +97,5 @@ public interface VoucherController {
             @ApiResponse(responseCode = "200", description = "Voucher status successfully updated"),
             @ApiResponse(responseCode = "400", description = "Validation error, e.g., invalid input")
     })
-    RemoteResponse changeVoucherStatus(UUID id, VoucherStatus status);
+    RemoteResponse changeVoucherStatus(UUID id, VoucherStatusRequest voucherStatusRequest);
 }

@@ -1,6 +1,6 @@
 package com.epam.finaltask.integration;
 
-import com.epam.finaltask.dto.RequestAmount;
+import com.epam.finaltask.dto.AmountRequest;
 import com.epam.finaltask.dto.UserDTO;
 import com.epam.finaltask.mapper.UserMapper;
 import com.epam.finaltask.model.Role;
@@ -118,7 +118,7 @@ public class UserControllerFullIntegrationTest {
     void testBalanceTopUp() throws Exception {
         UserDTO user = addUser("testUser");
 
-        RequestAmount amount = new RequestAmount(50.0);
+        AmountRequest amount = new AmountRequest(50.0);
 
         mockMvc.perform(patch("/users/" + user.getId() + "/top_up")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -1,6 +1,8 @@
 package com.epam.finaltask.controller.impl;
 
+import com.epam.finaltask.dto.HotStatusRequest;
 import com.epam.finaltask.dto.RemoteResponse;
+import com.epam.finaltask.dto.VoucherStatusRequest;
 import com.epam.finaltask.dto.VoucherDTO;
 import com.epam.finaltask.model.VoucherStatus;
 import com.epam.finaltask.service.LocalizationService;
@@ -139,12 +141,12 @@ class VoucherControllerImplTest {
     @Test
     void testChangeHotStatus() {
         UUID id = UUID.randomUUID();
-        boolean status = true;
+        HotStatusRequest hotStatusRequest = new HotStatusRequest(true, 1);
         VoucherDTO updatedVoucherDto = new VoucherDTO();
-        when(voucherService.changeHotStatus(id, status)).thenReturn(updatedVoucherDto);
+        when(voucherService.changeHotStatus(id, hotStatusRequest)).thenReturn(updatedVoucherDto);
         when(localizationService.getMessage("hot.status.changed")).thenReturn("Hot status changed");
 
-        RemoteResponse response = voucherController.changeHotStatus(id, status);
+        RemoteResponse response = voucherController.changeHotStatus(id, hotStatusRequest);
 
         assertNotNull(response);
         assertTrue(response.isSucceeded());
@@ -157,12 +159,12 @@ class VoucherControllerImplTest {
     @Test
     void testChangeVoucherStatus() {
         UUID id = UUID.randomUUID();
-        VoucherStatus status = VoucherStatus.PAID;
+        VoucherStatusRequest voucherStatusRequest = new VoucherStatusRequest(VoucherStatus.PAID, 1);
         VoucherDTO updatedVoucherDto = new VoucherDTO();
-        when(voucherService.changeVoucherStatus(id, status)).thenReturn(updatedVoucherDto);
+        when(voucherService.changeVoucherStatus(id, voucherStatusRequest)).thenReturn(updatedVoucherDto);
         when(localizationService.getMessage("voucher.status.changed")).thenReturn("Voucher status changed");
 
-        RemoteResponse response = voucherController.changeVoucherStatus(id, status);
+        RemoteResponse response = voucherController.changeVoucherStatus(id, voucherStatusRequest);
 
         assertNotNull(response);
         assertTrue(response.isSucceeded());

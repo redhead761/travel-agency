@@ -51,4 +51,7 @@ public class Voucher implements BaseEntity<UUID> {
 
     @Column(name = "is_hot")
     private boolean hot;
+
+    @Version
+    private int version;
 }

@@ -1,10 +1,11 @@
 package com.epam.finaltask.service;
 
+import com.epam.finaltask.dto.HotStatusRequest;
+import com.epam.finaltask.dto.VoucherStatusRequest;
 import com.epam.finaltask.dto.VoucherDTO;
 import com.epam.finaltask.model.HotelType;
 import com.epam.finaltask.model.TourType;
 import com.epam.finaltask.model.TransferType;
-import com.epam.finaltask.model.VoucherStatus;
 import org.springframework.data.domain.Page;
 
 import java.util.UUID;
@@ -18,9 +19,9 @@ public interface VoucherService {
 
     void delete(UUID id);
 
-    VoucherDTO changeHotStatus(UUID id, boolean hotStatus);
+    VoucherDTO changeHotStatus(UUID id, HotStatusRequest hotStatusRequest);
 
-    VoucherDTO changeVoucherStatus(UUID id, VoucherStatus status);
+    VoucherDTO changeVoucherStatus(UUID id, VoucherStatusRequest voucherStatusRequest);
 
     Page<VoucherDTO> findAllByFilter(
             TourType tourType, TransferType transferType, HotelType hotelType, UUID userId,

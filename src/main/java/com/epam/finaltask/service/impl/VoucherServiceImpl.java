@@ -1,5 +1,7 @@
 package com.epam.finaltask.service.impl;
 
+import com.epam.finaltask.dto.HotStatusRequest;
+import com.epam.finaltask.dto.VoucherStatusRequest;
 import com.epam.finaltask.dto.VoucherDTO;
 import com.epam.finaltask.exception.OrderException;
 import com.epam.finaltask.exception.UserException;
@@ -9,6 +11,7 @@ import com.epam.finaltask.model.*;
 import com.epam.finaltask.repository.UserRepository;
 import com.epam.finaltask.repository.VoucherRepository;
 import com.epam.finaltask.service.VoucherService;
+import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -68,17 +71,19 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    public VoucherDTO changeHotStatus(UUID id, boolean hotStatus) {
+    public VoucherDTO changeHotStatus(UUID id, HotStatusRequest hotStatusRequest) {
         Voucher voucher = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id));
-        voucher.setHot(hotStatus);
+        checkVersion(voucher.getVersion(), hotStatusRequest.getVersion());
+        voucher.setHot(hotStatusRequest.isStatus());
         return voucherMapper.toVoucherDTO(voucherRepository.save(voucher));
     }
 
     @Override
-    public VoucherDTO changeVoucherStatus(UUID id, VoucherStatus status) {
+    public VoucherDTO changeVoucherStatus(UUID id, VoucherStatusRequest voucherStatusRequest) {
         Voucher voucher = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id));
+        checkVersion(voucher.getVersion(), voucherStatusRequest.getVersion());
         refund(voucher);
-        voucher.setStatus(status);
+        voucher.setStatus(voucherStatusRequest.getStatus());
         Voucher updatedVoucher = voucherRepository.save(voucher);
         return voucherMapper.toVoucherDTO(updatedVoucher);
     }
@@ -144,4 +149,9 @@ public class VoucherServiceImpl implements VoucherService {
             voucher.setUser(null);
         }
     }
-}
+
+    private void checkVersion(int currentVersion, int expectedVersion) {
+        if (currentVersion != expectedVersion) {
+            throw new OptimisticLockException();
+        }
+    }}

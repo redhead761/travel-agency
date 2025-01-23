@@ -1,6 +1,6 @@
 package com.epam.finaltask.controller.impl;
 
-import com.epam.finaltask.dto.RequestAmount;
+import com.epam.finaltask.dto.AmountRequest;
 import com.epam.finaltask.dto.UserDTO;
 import com.epam.finaltask.model.Role;
 import com.epam.finaltask.service.LocalizationService;
@@ -142,10 +142,10 @@ class UserControllerImplTest {
 
     @Test
     void testBalanceTopUp() {
-        RequestAmount requestAmount = new RequestAmount(100.00);
+        AmountRequest amountRequest = new AmountRequest(100.00);
         when(localizationService.getMessage("user.balance.changed")).thenReturn("User balance changed");
 
-        RemoteResponse response = userController.balanceTopUp(userId, requestAmount);
+        RemoteResponse response = userController.balanceTopUp(userId, amountRequest);
 
         assertNotNull(response);
         assertTrue(response.isSucceeded());

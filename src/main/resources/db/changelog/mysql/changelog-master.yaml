@@ -17,3 +17,9 @@ databaseChangeLog:
       changes:
         - sqlFile:
             path: db/changelog/mysql/add-jwt-bl.sql
+  - changeSet:
+      id: AddFieldVersionForOptimisticLock
+      author: oleksandr.panchenko
+      changes:
+        - sqlFile:
+            path: db/changelog/mysql/add-version.sql
