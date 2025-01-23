@@ -1,7 +1,9 @@
 package com.epam.finaltask.integration;
 
+import com.epam.finaltask.dto.HotStatusRequest;
 import com.epam.finaltask.dto.UserDTO;
 import com.epam.finaltask.dto.VoucherDTO;
+import com.epam.finaltask.dto.VoucherStatusRequest;
 import com.epam.finaltask.mapper.UserMapper;
 import com.epam.finaltask.mapper.VoucherMapper;
 import com.epam.finaltask.model.*;
@@ -146,10 +148,11 @@ public class VoucherControllerFullIntegrationTest {
     @WithMockUser(authorities = {"ROLE_ADMIN"})
     void testChangeHotStatus() throws Exception {
         VoucherDTO voucher = addVoucher("Winter Vacation");
+        HotStatusRequest hotStatusRequest = new HotStatusRequest(true, 0);
 
         mockMvc.perform(patch("/vouchers/" + voucher.getId() + "/hot")
-                        .param("status", "true")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(hotStatusRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.succeeded").value(true))
                 .andExpect(jsonPath("$.results[0].title", is("Winter Vacation")));
@@ -159,10 +162,11 @@ public class VoucherControllerFullIntegrationTest {
     @WithMockUser(authorities = {"ROLE_ADMIN"})
     void testChangeVoucherStatus() throws Exception {
         VoucherDTO voucher = addVoucher("Winter Vacation");
+        VoucherStatusRequest voucherStatusRequest = new VoucherStatusRequest(VoucherStatus.PAID, 0);
 
         mockMvc.perform(patch("/vouchers/" + voucher.getId() + "/status")
-                        .param("status", VoucherStatus.PAID.name())
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(voucherStatusRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.succeeded").value(true))
                 .andExpect(jsonPath("$.results[0].title", is("Winter Vacation")));
