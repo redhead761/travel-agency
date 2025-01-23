@@ -111,8 +111,8 @@ public class GlobalExceptionHandler {
 
     private String getMessage(MethodArgumentTypeMismatchException e) {
         String paramName = e.getName();
-        String paramValue = (e.getValue() != null) ? e.getValue().toString() : "null";
-        String requiredType = (e.getRequiredType() != null) ? e.getRequiredType().getSimpleName() : "Unknown";
+        String paramValue = Objects.requireNonNull(e.getValue()).toString();
+        String requiredType = Objects.requireNonNull(e.getRequiredType()).getSimpleName();
         return localizationService.getMessage("enum.not.found.exception", new Object[]{paramValue, paramName, requiredType});
     }
 
