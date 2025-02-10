@@ -1,0 +1,47 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql_container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: travel_agency
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    image: openjdk:21
+    container_name: backend_container
+    restart: always
+    depends_on:
+      - mysql
+    volumes:
+      - ./target/travel-agency.jar:/app/backend.jar
+      - ./.env-dev.properties:/app/.env-dev.properties
+    working_dir: /app
+    command: ["java", "-jar", "backend.jar"]
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+    env_file:
+      - ./.env-dev.properties
+    ports:
+      - "8080:8080"
+
+  frontend:
+    image: nginx:alpine
+    container_name: frontend_container
+    restart: always
+    depends_on:
+      - backend
+    volumes:
+      - C:/Users/User/IdeaProjects/travel.agency/dist:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "80:80"
+
+volumes:
+  mysql_data:
