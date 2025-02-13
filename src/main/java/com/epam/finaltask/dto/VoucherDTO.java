@@ -17,6 +17,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -25,7 +26,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @ValidDates
-public class VoucherDTO {
+public class VoucherDTO implements Serializable {
     private String id;
 
     @NotBlank(message = "title.not.blank")

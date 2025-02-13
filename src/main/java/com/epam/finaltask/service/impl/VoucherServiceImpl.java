@@ -14,6 +14,9 @@ import com.epam.finaltask.service.VoucherService;
 import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +40,7 @@ public class VoucherServiceImpl implements VoucherService {
     private static final String BY_ID = "id";
 
     @Override
+    @CacheEvict(value = "voucherFilters", allEntries = true)
     public VoucherDTO create(VoucherDTO voucherDTO) {
         voucherDTO.setStatus(VoucherStatus.REGISTERED.name());
         Voucher newVoucher = voucherMapper.toVoucher(voucherDTO);
@@ -45,6 +49,7 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
+    @Caching(evict = {@CacheEvict(value = "vouchers", key = "#voucherId"), @CacheEvict(value = "voucherFilters", allEntries = true)})
     public VoucherDTO order(UUID voucherId, UUID userId) {
         Voucher voucher = voucherRepository.findById(voucherId).orElseThrow(() -> new VoucherException(voucherId));
         User user = userRepository.findById(userId).orElseThrow(() -> new UserException(userId));
@@ -55,6 +60,7 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
+    @Caching(evict = {@CacheEvict(value = "vouchers", key = "id"), @CacheEvict(value = "voucherFilters", allEntries = true)})
     public VoucherDTO update(UUID id, VoucherDTO voucherDTO) {
         Voucher voucherForUpdate = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id));
         Voucher newVoucher = voucherMapper.toVoucher(voucherDTO);
@@ -64,6 +70,7 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
+    @Caching(evict = {@CacheEvict(value = "vouchers", key = "#id"), @CacheEvict(value = "voucherFilters", allEntries = true)})
     public void delete(UUID id) {
         Voucher voucher = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id));
         refund(voucher);
@@ -71,6 +78,7 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
+    @Caching(evict = {@CacheEvict(value = "vouchers", key = "#id"), @CacheEvict(value = "voucherFilters", allEntries = true)})
     public VoucherDTO changeHotStatus(UUID id, HotStatusRequest hotStatusRequest) {
         Voucher voucher = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id));
         checkVersion(voucher.getVersion(), hotStatusRequest.getVersion());
@@ -79,6 +87,7 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
+    @Caching(evict = {@CacheEvict(value = "vouchers", key = "#id"), @CacheEvict(value = "voucherFilters", allEntries = true)})
     public VoucherDTO changeVoucherStatus(UUID id, VoucherStatusRequest voucherStatusRequest) {
         Voucher voucher = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id));
         checkVersion(voucher.getVersion(), voucherStatusRequest.getVersion());
@@ -88,6 +97,8 @@ public class VoucherServiceImpl implements VoucherService {
         return voucherMapper.toVoucherDTO(updatedVoucher);
     }
 
+    @Cacheable(value = "voucherFilters",
+            key = "(#tourType ?: 'any') + '_' + (#transferType ?: 'any') + '_' + (#hotelType ?: 'any') + '_' + (#userId ?: 'any') + '_' + (#minPrice ?: 0) + '_' + (#maxPrice ?: 999999) + '_' + #page + '_' + #size")
     @Transactional(readOnly = true)
     @Override
     public Page<VoucherDTO> findAllByFilter(TourType tourType, TransferType transferType, HotelType hotelType, UUID userId,
@@ -97,6 +108,7 @@ public class VoucherServiceImpl implements VoucherService {
         return vouchers.map(voucherMapper::toVoucherDTO);
     }
 
+    @Cacheable(value = "vouchers", key = "#id")
     @Transactional(readOnly = true)
     @Override
     public VoucherDTO getById(UUID id) {
@@ -154,4 +166,5 @@ public class VoucherServiceImpl implements VoucherService {
         if (currentVersion != expectedVersion) {
             throw new OptimisticLockException();
         }
-    }}
+    }
+}
