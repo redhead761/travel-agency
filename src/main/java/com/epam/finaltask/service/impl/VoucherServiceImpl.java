@@ -60,7 +60,7 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    @Caching(evict = {@CacheEvict(value = "vouchers", key = "id"), @CacheEvict(value = "voucherFilters", allEntries = true)})
+    @Caching(evict = {@CacheEvict(value = "vouchers", key = "#id"), @CacheEvict(value = "voucherFilters", allEntries = true)})
     public VoucherDTO update(UUID id, VoucherDTO voucherDTO) {
         Voucher voucherForUpdate = voucherRepository.findById(id).orElseThrow(() -> new VoucherException(id));
         Voucher newVoucher = voucherMapper.toVoucher(voucherDTO);
