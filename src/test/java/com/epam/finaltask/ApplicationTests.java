@@ -8,15 +8,15 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+
 @SpringBootTest
 @ActiveProfiles("test")
-class ApplicationTests {
+public class ApplicationTests {
+    @Autowired
+    private ApplicationContext applicationContext;
 
-	@Autowired
-	private ApplicationContext applicationContext;
-
-	@Test
-	void contextLoads() {
-		assertNotNull(applicationContext);
-	}
+    @Test
+    void contextLoads() {
+        assertNotNull(applicationContext);
+    }
 }

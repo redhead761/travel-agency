@@ -94,21 +94,8 @@ logging:
 spring:
   config:
     activate:
-      on-profile: prod
-    import: "optional:file:.env-prod[.properties]"
-
-server:
-  error:
-    include-message: always
----
-spring:
-  config:
-    activate:
       on-profile: test
     import: "optional:file:.env-test.properties"
-  h2:
-    console:
-      enabled: true
   liquibase:
     contexts: test
   jpa:
@@ -117,7 +104,7 @@ spring:
       hibernate:
         ddl-auto: create-drop
         format_sql: true
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 logging:
   level:
     com.epam.finaltask: DEBUG

@@ -5,3 +5,15 @@ databaseChangeLog:
       changes:
         - sqlFile:
             path: db/changelog/postgres/database-creation.sql
+  - changeSet:
+      id: AddJwtBlackListTable
+      author: oleksandr.panchenko
+      changes:
+        - sqlFile:
+            path: db/changelog/postgres/add-jwt-bl.sql
+  - changeSet:
+      id: AddFieldVersionForOptimisticLock
+      author: oleksandr.panchenko
+      changes:
+        - sqlFile:
+            path: db/changelog/postgres/add-version.sql
